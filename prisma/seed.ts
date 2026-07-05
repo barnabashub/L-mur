@@ -17,6 +17,10 @@ const db = new PrismaClient();
 async function main() {
   // Idempotens seed: mindent újraépítünk.
   await db.$transaction([
+    db.couponRedemption.deleteMany(),
+    db.emailLog.deleteMany(),
+    db.authToken.deleteMany(),
+    db.reminderLog.deleteMany(),
     db.notification.deleteMany(),
     db.moderationAction.deleteMany(),
     db.moderationRequest.deleteMany(),
@@ -90,6 +94,10 @@ async function main() {
     isLocationIndependent?: boolean;
     isSeasonal?: boolean;
     seasonLabel?: string;
+    seasonMonths?: string;
+    tags?: string;
+    lat?: number;
+    lng?: number;
     partnerId?: string;
     submitterId?: string;
     status?: string;
@@ -110,6 +118,8 @@ async function main() {
         'Sétáljatok fel naplemente előtt fél órával a Halászbástyához, és nézzétek végig kettesben, ahogy a Duna fölött lemegy a nap. Utána egy forró csoki a közeli cukrászdában teszi teljessé az estét. Tipp: hétköznap sokkal kevesebb a turista.',
       category: 'Romantikus',
       locationName: 'Budapest, Halászbástya',
+      lat: 47.5022, lng: 19.0344,
+      tags: 'ingyenes, kilátás, klasszikus',
       partnerId: budaVar.id,
     }),
     bukk: await mkIdea({
@@ -118,8 +128,11 @@ async function main() {
         'Egész napos, közepesen nehéz túra a Bükki Nemzeti Park szakvezetőjével. Kilátópontok, víznyelők, és ha szerencsétek van, muflonok. Vigyetek réteges ruhát és sok vizet — a fennsíkon hűvösebb van.',
       category: 'Természet',
       locationName: 'Bükki Nemzeti Park',
+      lat: 48.07, lng: 20.5,
+      tags: 'túra, kutyabarát',
       isSeasonal: true,
       seasonLabel: 'áprilistól októberig',
+      seasonMonths: '4,5,6,7,8,9,10',
       partnerId: bukkiNP.id,
     }),
     tarsas: await mkIdea({
@@ -128,6 +141,7 @@ async function main() {
         'Válasszatok egy kétszemélyes társasjátékot (Patchwork, 7 Csoda Párbaj, Fesztáv…), készítsetek nassolnivalót, és kapcsoljátok ki a telefonokat. A vesztes mosogat egy hétig!',
       category: 'Otthoni',
       isLocationIndependent: true,
+      tags: 'olcsó, esős napra',
     }),
     kavezoJatek: await mkIdea({
       title: 'Kávé + társasjáték a Zamatban',
@@ -135,6 +149,8 @@ async function main() {
         'A Zamat Kávézó polcán több tucat társasjáték vár. Kérjetek két cappuccinót, és játsszatok egy jót — a törzsvendégek szerint a sarki fotelsarok a legjobb hely.',
       category: 'Gasztronómia',
       locationName: 'Budapest, Zamat Kávézó',
+      lat: 47.4979, lng: 19.0552,
+      tags: 'kávé, társasjáték',
       partnerId: kavezo.id,
     }),
     margitsziget: await mkIdea({
@@ -143,8 +159,11 @@ async function main() {
         'Kockás pléd, friss pékáru, sajt, gyümölcs és egy jó lemez a hordozható hangszórón. A Margitsziget nagyrétje tökéletes piknikhely, utána a szökőkút zenés show-ja ingyenes ráadás.',
       category: 'Romantikus',
       locationName: 'Budapest, Margitsziget',
+      lat: 47.527, lng: 19.045,
+      tags: 'ingyenes, piknik',
       isSeasonal: true,
       seasonLabel: 'májustól szeptemberig',
+      seasonMonths: '5,6,7,8,9',
     }),
     fozes: await mkIdea({
       title: 'Főzzétek meg együtt az első közös receptet',
@@ -159,6 +178,8 @@ async function main() {
         'Válasszatok a múzeumban külön-külön egy-egy festményt, majd meséljétek el egymásnak, miért pont azt. Meglepő, mennyit elárul a másikról. A hónap első vasárnapján több kiállítás kedvezményes.',
       category: 'Kultúra',
       locationName: 'Budapest, Szépművészeti Múzeum',
+      lat: 47.516, lng: 19.077,
+      tags: 'esős napra, múzeum',
     }),
     csillagles: await mkIdea({
       title: 'Csillagles a fényszennyezéstől távol',
@@ -166,8 +187,11 @@ async function main() {
         'Augusztusi hullócsillag-esőkor keressetek egy sötét dombtetőt (a Zselici Csillagpark a legjobb), vigyetek plédet, termoszban teát, és számoljátok a hullócsillagokat. Kívánni kötelező!',
       category: 'Kaland',
       locationName: 'Zselici Csillagoségbolt-park',
+      lat: 46.23, lng: 17.75,
+      tags: 'ingyenes, éjszakai',
       isSeasonal: true,
       seasonLabel: 'augusztus közepe (Perseidák)',
+      seasonMonths: '8',
     }),
     tanc: await mkIdea({
       title: 'Páros táncóra kezdőknek',
@@ -182,8 +206,11 @@ async function main() {
         'Gőzölgő kültéri medence, csillagos téli ég, sakkozó bácsik — a Széchenyi fürdő esti fényekkel az egyik legromantikusabb téli program Budapesten.',
       category: 'Romantikus',
       locationName: 'Budapest, Széchenyi Gyógyfürdő',
+      lat: 47.5186, lng: 19.082,
+      tags: 'fürdő, téli',
       isSeasonal: true,
       seasonLabel: 'novembertől februárig a leghangulatosabb',
+      seasonMonths: '11,12,1,2',
     }),
     levelek: await mkIdea({
       title: 'Írjatok levelet a 10 évvel későbbi magatoknak',
@@ -198,8 +225,11 @@ async function main() {
         'Kézműves vásár, forralt bor, kürtőskalács és fényfüzérek. Válasszatok egymásnak egy-egy apró kézműves ajándékot — maximum 2000 forintból!',
       category: 'Esemény',
       locationName: 'Budapest, Vörösmarty tér',
+      lat: 47.496, lng: 19.051,
+      tags: 'ünnepi, vásár',
       isSeasonal: true,
       seasonLabel: 'adventi időszak',
+      seasonMonths: '12',
     }),
     biciklitura: await mkIdea({
       title: 'Balaton-parti biciklitúra fagyizással',
@@ -207,8 +237,11 @@ async function main() {
         'Béreljetek bringát és tekerjetek végig a déli parton Balatonföldvártól Szemesig. Útközben kötelező megálló minimum két fagyizónál — pontozzátok őket közösen!',
       category: 'Aktív / sport',
       locationName: 'Balaton déli part',
+      lat: 46.85, lng: 17.88,
+      tags: 'bicikli, fagyi, balaton',
       isSeasonal: true,
       seasonLabel: 'júniustól szeptemberig',
+      seasonMonths: '6,7,8,9',
     }),
     hajnal: await mkIdea({
       title: 'Hajnali napfelkelte-vadászat',
@@ -366,8 +399,20 @@ async function main() {
     },
   });
 
+  // Partner munkatárs fiók a Zamat Kávézóhoz (partnerfelület demó).
+  await db.user.create({
+    data: {
+      email: 'partner@zamat.hu',
+      name: 'Zamat Kávézó (pult)',
+      passwordHash: hash,
+      role: 'PARTNER',
+      partnerId: kavezo.id,
+      emailVerifiedAt: verified,
+    },
+  });
+
   console.log('✔ Seed kész. Demó fiókok (jelszó: titok123!):');
-  console.log('  admin@kettesben.hu / mod@kettesben.hu / anna@example.com / bence@example.com / kata@example.com');
+  console.log('  admin@kettesben.hu / mod@kettesben.hu / anna@example.com / bence@example.com / kata@example.com / partner@zamat.hu');
 }
 
 main()

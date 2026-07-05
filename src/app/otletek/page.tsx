@@ -14,6 +14,7 @@ export default async function IdeasPage({
     kategoria?: string;
     hely?: string;
     rendezes?: string;
+    cimke?: string;
     hiba?: string;
     uzenet?: string;
   }>;
@@ -21,6 +22,7 @@ export default async function IdeasPage({
   const sp = await searchParams;
   const filter: IdeaFilter = {
     q: sp.q,
+    cimke: sp.cimke,
     category: sp.kategoria,
     hely: sp.hely === 'helyfuggetlen' || sp.hely === 'helyhez-kotott' ? sp.hely : undefined,
     rendezes:
@@ -39,6 +41,13 @@ export default async function IdeasPage({
       </div>
 
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
+
+      {sp.cimke && (
+        <p className="mb-4 text-sm text-stone-600">
+          Szűrés címkére: <span className="badge bg-stone-100 text-stone-700">#{sp.cimke}</span>{' '}
+          <Link href="/otletek" className="text-rose-600 hover:underline">× szűrő törlése</Link>
+        </p>
+      )}
 
       <form className="card mb-8 grid gap-3 p-4 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
         <input

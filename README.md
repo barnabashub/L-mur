@@ -27,6 +27,13 @@ A teljes termék- és rendszerterv: **[SPECIFICATION.md](./SPECIFICATION.md)**
 - 📱 **Mobil alkalmazás (iOS + Android)** — Expo/React Native kliens a `mobile/` mappában, saját
   REST API-val (`/api/v1/*`, Bearer token); részletek: [mobile/README.md](./mobile/README.md)
 - 🏠 **PWA** — a webapp kezdőképernyőre telepíthető (manifest + ikonok)
+- 🗺️ **Térképnézet** — helyhez kötött ötletek stilizált országtérképen (`/terkep`)
+- 🔍 **Felfedezés** — „ötlet a mai napra" napi ajánló, szezonális főoldali kiemelések,
+  kattintható #címkék az ötleteken
+- 🎫 **Partnerprogram** — egyedi, beváltás-követett kuponkódok; partner önkiszolgáló felület
+  (`/partner`): beváltás a helyszínen + statisztika
+- 🛡️ **Üzemeltetés** — GitHub Actions CI, rate limiting az auth útvonalakon, GDPR adatexport
+  és fióktörlés a profilról
 
 ## Gyors indítás
 
@@ -45,6 +52,7 @@ npm run dev       # http://localhost:3000
 | `anna@example.com` | felhasználó — Bencével párban |
 | `bence@example.com` | felhasználó — Annával párban |
 | `kata@example.com` | felhasználó — pár nélkül |
+| `partner@zamat.hu` | partner munkatárs (kuponbeváltó felület) |
 
 ## Parancsok
 

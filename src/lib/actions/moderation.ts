@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin, requireModerator } from '@/lib/auth';
 import { CATEGORIES } from '@/lib/constants';
+import { normalizeTags, parseMonths } from '@/lib/discover';
 import { saveUpload } from '@/lib/uploads';
 import { appUrl, sendMail } from '@/lib/mail';
 import {
@@ -117,6 +118,16 @@ export async function editIdea(formData: FormData) {
     failTo(back, (e as Error).message);
   }
 
+  const latRaw = str(formData, 'lat');
+  const lngRaw = str(formData, 'lng');
+  const lat = latRaw ? Number(latRaw) : null;
+  const lng = lngRaw ? Number(lngRaw) : null;
+  if ((lat !== null && (isNaN(lat) || lat < -90 || lat > 90)) ||
+      (lng !== null && (isNaN(lng) || lng < -180 || lng > 180))) {
+    failTo(back, 'Érvénytelen koordináták.');
+  }
+  const months = parseMonths(str(formData, 'seasonMonths'));
+
   await db.dateIdea.update({
     where: { id },
     data: {
@@ -127,6 +138,10 @@ export async function editIdea(formData: FormData) {
       locationName: data.isLocationIndependent ? null : data.locationName ?? null,
       isSeasonal: data.isSeasonal,
       seasonLabel: data.isSeasonal ? data.seasonLabel ?? null : null,
+      seasonMonths: data.isSeasonal && months.length ? months.join(',') : null,
+      tags: normalizeTags(str(formData, 'tags')),
+      lat: data.isLocationIndependent ? null : lat,
+      lng: data.isLocationIndependent ? null : lng,
       partnerId: data.partnerId || null,
       imagePath,
     },

@@ -5,6 +5,7 @@ import { apiError, apiOk, createApiToken } from '@/lib/api-auth';
 import { issueToken } from '@/lib/tokens';
 import { appUrl, sendMail } from '@/lib/mail';
 import { verifyEmailMail } from '@/lib/mail-templates';
+import { rateLimit } from '@/lib/rate-limit';
 
 const schema = z.object({
   name: z.string().min(2).max(80),
@@ -13,6 +14,10 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'ismeretlen';
+  if (!rateLimit(`api-register:${ip}`, 10, 60_000).allowed) {
+    return apiError(429, 'Túl sok próbálkozás — várj egy percet.');
+  }
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) return apiError(400, 'Érvénytelen adatok: név, e-mail és legalább 8 karakteres jelszó kell.');

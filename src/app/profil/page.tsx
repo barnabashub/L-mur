@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { requireUser, partnerOf } from '@/lib/auth';
 import { resendVerification } from '@/lib/actions/auth';
-import { formatDate } from '@/lib/format';
+import { deleteAccount } from '@/lib/actions/account';
+import { formatDate, formatDateTime } from '@/lib/format';
 import { Stars } from '@/components/Stars';
 import { Flash } from '@/components/Flash';
 
@@ -23,7 +24,7 @@ export default async function ProfilePage({
   const sp = await searchParams;
   const partner = partnerOf(user);
 
-  const [ideas, reviews, completionCount, listCount] = await Promise.all([
+  const [ideas, reviews, completionCount, listCount, coupons] = await Promise.all([
     db.dateIdea.findMany({ where: { submitterId: user.id }, orderBy: { createdAt: 'desc' } }),
     db.review.findMany({
       where: { userId: user.id },
@@ -32,6 +33,11 @@ export default async function ProfilePage({
     }),
     db.completion.count({ where: { userId: user.id } }),
     db.bucketList.count({ where: { ownerId: user.id } }),
+    db.couponRedemption.findMany({
+      where: { userId: user.id },
+      include: { partner: { select: { name: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
   return (
@@ -108,6 +114,27 @@ export default async function ProfilePage({
         )}
       </section>
 
+      {coupons.length > 0 && (
+        <section>
+          <h2 className="mb-3 text-lg font-bold">Kuponjaim 🎫</h2>
+          <ul className="space-y-2">
+            {coupons.map((c) => (
+              <li key={c.id} className="card flex flex-wrap items-center gap-2 p-3 text-sm">
+                <span className="font-mono font-bold">{c.code}</span>
+                <span className="text-stone-500">{c.partner.name}</span>
+                <span className="ml-auto">
+                  {c.redeemedAt ? (
+                    <span className="badge bg-stone-100 text-stone-500">beváltva: {formatDateTime(c.redeemedAt)}</span>
+                  ) : (
+                    <span className="badge bg-emerald-50 text-emerald-700">aktív — mutasd fel a helyszínen</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section>
         <h2 className="mb-3 text-lg font-bold">Értékeléseim</h2>
         {reviews.length === 0 ? (
@@ -124,6 +151,34 @@ export default async function ProfilePage({
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="card border-stone-300 p-6">
+        <h2 className="mb-1 text-lg font-bold">Adataim és fiókom ⚙️</h2>
+        <p className="mb-4 text-sm text-stone-500">
+          A GDPR szerint bármikor letöltheted az összes adatodat, vagy véglegesen törölheted a fiókodat.
+        </p>
+        <a href="/api/export" className="btn-secondary" download>
+          ⬇️ Adataim letöltése (JSON)
+        </a>
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-semibold text-red-700">Fiók végleges törlése…</summary>
+          <form action={deleteAccount} className="mt-3 max-w-md space-y-3">
+            <p className="text-xs text-stone-500">
+              A pipáid, emlékeid, értékeléseid, listáid és dátumaid véglegesen törlődnek. A közösségnek
+              elfogadott ötleteid név nélkül megmaradnak. Ez a művelet nem vonható vissza!
+            </p>
+            <div>
+              <label className="label" htmlFor="del-password">Jelszavad</label>
+              <input className="input" type="password" id="del-password" name="password" required />
+            </div>
+            <div>
+              <label className="label" htmlFor="del-confirm">Írd be: TÖRLÉS</label>
+              <input className="input" id="del-confirm" name="confirm" required placeholder="TÖRLÉS" />
+            </div>
+            <button className="btn-danger">Fiókom végleges törlése</button>
+          </form>
+        </details>
       </section>
     </div>
   );

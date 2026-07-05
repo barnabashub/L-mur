@@ -18,12 +18,18 @@ export async function Header() {
         </Link>
         <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-stone-600">
           <Link href="/otletek" className="hover:text-rose-600">Ötletek</Link>
+          <Link href="/terkep" className="hover:text-rose-600">Térkép</Link>
           <Link href="/bakancslistak" className="hover:text-rose-600">Bakancslisták</Link>
           <Link href="/partnerek" className="hover:text-rose-600">Partnerek</Link>
           {user && (
             <>
               <Link href="/naplo" className="hover:text-rose-600">Naplónk</Link>
               <Link href="/datumok" className="hover:text-rose-600">Dátumaink</Link>
+              {user.role === 'PARTNER' && (
+                <Link href="/partner" className="font-semibold text-amber-700 hover:text-amber-800">
+                  Partnerfelület
+                </Link>
+              )}
               {isModerator(user.role) && (
                 <Link href="/moderacio" className="font-semibold text-amber-700 hover:text-amber-800">
                   Moderáció

@@ -1,5 +1,6 @@
 import 'server-only';
 import { db } from './db';
+import { parseTags } from './discover';
 
 /** Átlagértékelés — null, ha nincs értékelés. */
 export function avgStars(reviews: { stars: number }[]): number | null {
@@ -12,6 +13,7 @@ export type IdeaFilter = {
   category?: string;
   hely?: 'helyfuggetlen' | 'helyhez-kotott';
   rendezes?: 'ertekeles' | 'nepszeru' | 'legujabb';
+  cimke?: string;
 };
 
 /** Jóváhagyott ötletek szűrve, statisztikákkal, rendezve. */
@@ -40,11 +42,16 @@ export async function fetchApprovedIdeas(filter: IdeaFilter) {
     orderBy: { createdAt: 'desc' },
   });
 
-  const withStats = ideas.map((idea) => ({
+  let withStats = ideas.map((idea) => ({
     ...idea,
     avg: avgStars(idea.reviews),
     completionCount: idea._count.completions,
   }));
+
+  if (filter.cimke) {
+    const wanted = filter.cimke.toLowerCase();
+    withStats = withStats.filter((i) => parseTags(i.tags).includes(wanted));
+  }
 
   if (filter.rendezes === 'ertekeles') {
     withStats.sort((a, b) => (b.avg ?? 0) - (a.avg ?? 0) || b.reviews.length - a.reviews.length);

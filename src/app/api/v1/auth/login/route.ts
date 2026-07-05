@@ -1,8 +1,13 @@
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
 import { apiError, apiOk, createApiToken } from '@/lib/api-auth';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'ismeretlen';
+  if (!rateLimit(`api-login:${ip}`, 10, 60_000).allowed) {
+    return apiError(429, 'Túl sok próbálkozás — várj egy percet.');
+  }
   const body = await req.json().catch(() => null);
   const email = typeof body?.email === 'string' ? body.email.toLowerCase().trim() : '';
   const password = typeof body?.password === 'string' ? body.password : '';

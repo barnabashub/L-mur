@@ -162,8 +162,17 @@ adatbázisba naplózott „fejlesztői postafiók" a moderációs felületen), e
 e-mail-megerősítés egyszer használatos, hashelve tárolt tokenekkel, valamint évforduló-emlékeztető
 cron végpont (`/api/cron/emlekeztetok`, Bearer-titokkal, fordulónkénti dedupe-pal).
 A *web push* a HTTPS- és service-worker-igénye miatt a Fázis 5 (üzemeltetés) részeként ésszerű.
-**Fázis 3 — tartalom és felfedezés:** térképnézet (koordináták már a modellben előkészíthetők), címkék a kategóriák mellett, „ötlet a mai napra" ajánló, szezonális főoldali kiemelések, többnyelvűség (EN).
-**Fázis 4 — partnerprogram:** partner önkiszolgáló felület, kuponbeváltás-követés (egyedi kódok, statisztika), Három Királyfi mozgalom közös kampányai.
+**Fázis 3 — tartalom és felfedezés:** ✅ **megvalósítva** (kivéve: EN nyelv) —
+címkék az ötleteken (normalizálva tárolva, kattintható #címke-szűrő), térképnézet
+(`/terkep`: koordináták a modellben, önálló stilizált SVG-térkép — prodban Leaflet/OSM-re
+cserélhető), „ötlet a mai napra" determinisztikus napi ajánló a főoldalon, valamint
+szezonális kiemelés (`seasonMonths` hónaplista alapján az épp aktuális ötletek).
+A többnyelvűség (EN) későbbre halasztva.
+**Fázis 4 — partnerprogram:** ✅ **megvalósítva** — egyedi, beváltás-követett kuponkódok
+(a felhasználó az ötlet oldalán kér KET-XXXX kódot, a profilján is látja), PARTNER
+szerepkör + partner önkiszolgáló felület (`/partner`): kód beváltása a helyszínen,
+kiadott/beváltott statisztika, ötletenkénti bontás. A Három Királyfi mozgalom közös
+kampányai szervezési (nem fejlesztési) feladat.
 **Fázis — mobil (iOS + Android):** ✅ **megvalósítva** —
 - **REST API v1** (`/api/v1/*`): Bearer-tokenes auth (a webes munkamenettől független, `api`
   audience-szel), végpontok: auth/regisztráció, profil, ötletek (lista/részletek/beküldés),
@@ -176,7 +185,14 @@ A *web push* a HTTPS- és service-worker-igénye miatt a Fázis 5 (üzemeltetés
   azonosítók beállítva (`hu.kettesben.app`), kiadás EAS Builddel.
 - **PWA**: a webapp telepíthető kezdőképernyőre (manifest + ikonok, standalone mód).
 
-**Fázis 5 — üzemeltetés:** PostgreSQL + S3, CI/CD, monitoring, rate limiting, CDN a képekhez, GDPR-export/törlés, web push az évfordulókhoz.
+**Fázis 5 — üzemeltetés:** ✅ **részben megvalósítva** —
+- CI (GitHub Actions): egységtesztek + web build + mobil typecheck minden pushnál,
+- rate limiting a belépés/regisztráció/jelszóreset útvonalakon (web + API; folyamaton
+  belüli fix ablak, prodban Redis-re cserélhető),
+- GDPR: teljes adatexport (`/api/export`, JSON letöltés) és fióktörlés (jelszavas +
+  szöveges megerősítéssel; a közösségi ötletek anonimizálva maradnak).
+Hátralévő üzemeltetési elemek (infrastruktúra-függők): PostgreSQL + S3 átállás (a séma
+és a feltöltés-modul előkészítve), monitoring, CDN, web push az évfordulókhoz.
 
 ## 8. Nyitott kérdések — döntésekkel
 

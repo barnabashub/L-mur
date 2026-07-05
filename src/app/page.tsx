@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { fetchApprovedIdeas } from '@/lib/ideas';
+import { isInSeason, pickOfTheDay } from '@/lib/discover';
 import { IdeaCard } from '@/components/IdeaCard';
+import { IdeaImage } from '@/components/IdeaImage';
 import { Flash } from '@/components/Flash';
 
 export default async function HomePage({
@@ -16,6 +18,9 @@ export default async function HomePage({
     db.completion.count(),
     db.couple.count(),
   ]);
+  const today = new Date();
+  const daily = pickOfTheDay(top, today);
+  const seasonal = top.filter((i) => i.isSeasonal && isInSeason(i.seasonMonths, today)).slice(0, 3);
 
   return (
     <div className="space-y-14">
@@ -49,6 +54,32 @@ export default async function HomePage({
           ))}
         </dl>
       </section>
+
+      {daily && (
+        <section>
+          <h2 className="mb-4 text-xl font-bold">💡 Az ötlet a mai napra</h2>
+          <Link href={`/otletek/${daily.id}`} className="card group grid overflow-hidden transition hover:shadow-md sm:grid-cols-[280px_1fr]">
+            <IdeaImage imagePath={daily.imagePath} category={daily.category} title={daily.title} className="h-44 w-full sm:h-full" />
+            <div className="space-y-2 p-6">
+              <span className="badge bg-rose-50 text-rose-700">{daily.category}</span>
+              <h3 className="text-2xl font-bold text-stone-900 group-hover:text-rose-700">{daily.title}</h3>
+              <p className="line-clamp-3 text-sm text-stone-600">{daily.description}</p>
+              <p className="text-sm font-medium text-rose-600">Megnézem →</p>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {seasonal.length > 0 && (
+        <section>
+          <h2 className="mb-4 text-xl font-bold">📅 Épp aktuális — ne maradjatok le róla!</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {seasonal.map((idea) => (
+              <IdeaCard key={idea.id} idea={idea} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section>
         <div className="mb-4 flex items-end justify-between">

@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { createSession, destroySession } from '@/lib/session';
 import { requireUser } from '@/lib/auth';
+import { rateLimit } from '@/lib/rate-limit';
+import { clientIp } from '@/lib/client-ip';
 import { issueToken, consumeToken } from '@/lib/tokens';
 import { appUrl, sendMail } from '@/lib/mail';
 import { passwordResetMail, verifyEmailMail } from '@/lib/mail-templates';
@@ -16,7 +18,12 @@ const registerSchema = z.object({
   password: z.string().min(8, 'A jelszó legalább 8 karakter legyen.').max(128),
 });
 
+const RATE_MSG = 'Túl sok próbálkozás — várj egy percet, és próbáld újra.';
+
 export async function register(formData: FormData) {
+  if (!rateLimit(`register:${await clientIp()}`, 10, 60_000).allowed) {
+    failTo('/regisztracio', RATE_MSG);
+  }
   const parsed = registerSchema.safeParse({
     name: str(formData, 'name'),
     email: str(formData, 'email').toLowerCase(),
@@ -49,6 +56,9 @@ export async function resendVerification() {
 }
 
 export async function requestPasswordReset(formData: FormData) {
+  if (!rateLimit(`reset:${await clientIp()}`, 5, 60_000).allowed) {
+    failTo('/elfelejtett-jelszo', RATE_MSG);
+  }
   const email = str(formData, 'email').toLowerCase();
   if (!email) failTo('/elfelejtett-jelszo', 'Add meg az e-mail címedet.');
 
@@ -83,6 +93,9 @@ export async function resetPassword(formData: FormData) {
 }
 
 export async function login(formData: FormData) {
+  if (!rateLimit(`login:${await clientIp()}`, 10, 60_000).allowed) {
+    failTo('/belepes', RATE_MSG);
+  }
   const email = str(formData, 'email').toLowerCase();
   const password = formData.get('password');
   if (!email || typeof password !== 'string') failTo('/belepes', 'Add meg az adataidat.');

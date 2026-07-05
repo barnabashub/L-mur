@@ -8,6 +8,8 @@ import { formatDate } from '@/lib/format';
 import { toInputDate } from '@/lib/format';
 import { completeIdea, requestModeration, reviewIdea } from '@/lib/actions/ideas';
 import { addToList } from '@/lib/actions/lists';
+import { requestCoupon } from '@/lib/actions/coupons';
+import { parseTags } from '@/lib/discover';
 import { IdeaImage } from '@/components/IdeaImage';
 import { Stars, StarInput } from '@/components/Stars';
 import { Flash } from '@/components/Flash';
@@ -76,6 +78,11 @@ export default async function IdeaPage({
             {idea.isSeasonal && idea.seasonLabel && (
               <span className="badge bg-sky-50 text-sky-700">📅 {idea.seasonLabel}</span>
             )}
+            {parseTags(idea.tags).map((tag) => (
+              <Link key={tag} href={`/otletek?cimke=${encodeURIComponent(tag)}`} className="badge bg-stone-100 text-stone-600 hover:bg-stone-200">
+                #{tag}
+              </Link>
+            ))}
           </div>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
@@ -105,9 +112,15 @@ export default async function IdeaPage({
             <strong>{idea.partner.name}</strong>: {idea.partner.discountText}
           </p>
           {user ? (
-            <p className="mt-3 inline-block rounded-lg border border-dashed border-amber-400 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-amber-800">
-              {idea.partner.couponCode}
-            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <p className="inline-block rounded-lg border border-dashed border-amber-400 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-amber-800">
+                {idea.partner.couponCode}
+              </p>
+              <form action={requestCoupon}>
+                <input type="hidden" name="ideaId" value={idea.id} />
+                <button className="btn-secondary">🎫 Egyedi, követett kupont kérek</button>
+              </form>
+            </div>
           ) : (
             <p className="mt-3 text-sm text-amber-800">
               A kuponkódhoz <Link href="/belepes" className="font-semibold underline">lépj be</Link> vagy{' '}
