@@ -21,6 +21,7 @@ const TABS = [
   { key: 'keresek', label: 'Moderációs kérések' },
   { key: 'felhasznalok', label: 'Felhasználók' },
   { key: 'naplo', label: 'Audit napló' },
+  { key: 'emailek', label: 'E-mail napló' },
 ] as const;
 
 export default async function ModerationPage({
@@ -65,6 +66,7 @@ export default async function ModerationPage({
       {tab === 'keresek' && <OpenRequests />}
       {tab === 'felhasznalok' && <Users actorRole={mod.role} actorId={mod.id} />}
       {tab === 'naplo' && <AuditLog />}
+      {tab === 'emailek' && <EmailLogView />}
     </div>
   );
 }
@@ -271,5 +273,41 @@ async function AuditLog() {
         </li>
       ))}
     </ul>
+  );
+}
+
+async function EmailLogView() {
+  const emails = await db.emailLog.findMany({ orderBy: { createdAt: 'desc' }, take: 50 });
+
+  const STATUS_BADGE: Record<string, string> = {
+    SENT: 'bg-emerald-50 text-emerald-700',
+    LOGGED: 'bg-sky-50 text-sky-700',
+    FAILED: 'bg-red-50 text-red-700',
+  };
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-stone-500">
+        A rendszer által küldött e-mailek. A <span className="badge bg-sky-50 text-sky-700">LOGGED</span>{' '}
+        státusz azt jelenti, hogy nincs SMTP beállítva (fejlesztői mód) — a levél csak itt, a
+        naplóban jelent meg.
+      </p>
+      {emails.length === 0 ? (
+        <p className="card p-10 text-center text-stone-500">Még nem ment ki e-mail.</p>
+      ) : (
+        emails.map((m) => (
+          <details key={m.id} className="card p-4 text-sm">
+            <summary className="flex cursor-pointer flex-wrap items-center gap-2">
+              <span className={`badge ${STATUS_BADGE[m.status] ?? 'bg-stone-100 text-stone-600'}`}>{m.status}</span>
+              <span className="font-medium">{m.subject}</span>
+              <span className="text-stone-400">→ {m.to}</span>
+              <span className="ml-auto text-xs text-stone-400">{formatDateTime(m.createdAt)}</span>
+            </summary>
+            <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-stone-50 p-3 text-xs text-stone-700">{m.text}</pre>
+            {m.error && <p className="mt-2 text-xs text-red-600">Hiba: {m.error}</p>}
+          </details>
+        ))
+      )}
+    </div>
   );
 }

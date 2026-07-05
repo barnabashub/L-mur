@@ -4,6 +4,10 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { createSession, destroySession } from '@/lib/session';
+import { requireUser } from '@/lib/auth';
+import { issueToken, consumeToken } from '@/lib/tokens';
+import { appUrl, sendMail } from '@/lib/mail';
+import { passwordResetMail, verifyEmailMail } from '@/lib/mail-templates';
 import { failTo, okTo, str } from './helpers';
 
 const registerSchema = z.object({
@@ -27,8 +31,55 @@ export async function register(formData: FormData) {
   const user = await db.user.create({
     data: { name, email, passwordHash: await bcrypt.hash(password, 10) },
   });
+  const token = await issueToken(user.id, 'EMAIL_VERIFY');
+  await sendMail({ to: email, ...verifyEmailMail(name, appUrl(`/email-megerosites/${token}`)) });
   await createSession(user.id);
-  okTo('/', 'Sikeres regisztráció — üdvözlünk a Kettesben-ben!');
+  okTo('/', 'Sikeres regisztráció — üdvözlünk a Kettesben-ben! Megerősítő e-mailt küldtünk.');
+}
+
+export async function resendVerification() {
+  const user = await requireUser();
+  if (user.emailVerifiedAt) okTo('/profil', 'Az e-mail címed már meg van erősítve.');
+  const token = await issueToken(user.id, 'EMAIL_VERIFY');
+  await sendMail({
+    to: user.email,
+    ...verifyEmailMail(user.name, appUrl(`/email-megerosites/${token}`)),
+  });
+  okTo('/profil', 'Új megerősítő e-mailt küldtünk.');
+}
+
+export async function requestPasswordReset(formData: FormData) {
+  const email = str(formData, 'email').toLowerCase();
+  if (!email) failTo('/elfelejtett-jelszo', 'Add meg az e-mail címedet.');
+
+  const user = await db.user.findUnique({ where: { email } });
+  if (user) {
+    const token = await issueToken(user.id, 'PASSWORD_RESET');
+    await sendMail({
+      to: email,
+      ...passwordResetMail(user.name, appUrl(`/jelszo-visszaallitas/${token}`)),
+    });
+  }
+  // Szándékosan azonos üzenet akkor is, ha nincs ilyen fiók (user enumeration ellen).
+  okTo('/belepes', 'Ha létezik fiók ezzel a címmel, elküldtük a visszaállító linket.');
+}
+
+export async function resetPassword(formData: FormData) {
+  const token = str(formData, 'token');
+  const password = formData.get('password');
+  const back = `/jelszo-visszaallitas/${token}`;
+  if (typeof password !== 'string' || password.length < 8) {
+    failTo(back, 'A jelszó legalább 8 karakter legyen.');
+  }
+
+  const row = await consumeToken(token, 'PASSWORD_RESET');
+  if (!row) failTo('/elfelejtett-jelszo', 'A link érvénytelen vagy lejárt. Kérj újat!');
+
+  await db.user.update({
+    where: { id: row.userId },
+    data: { passwordHash: await bcrypt.hash(password, 10) },
+  });
+  okTo('/belepes', 'A jelszavad megváltozott — lépj be az újjal!');
 }
 
 export async function login(formData: FormData) {

@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireUser } from '@/lib/auth';
+import { appUrl, sendMail } from '@/lib/mail';
+import { coupleJoinedMail } from '@/lib/mail-templates';
 import { failTo, okTo, str } from './helpers';
 
 function makeInviteCode(): string {
@@ -46,6 +48,10 @@ export async function joinCouple(formData: FormData) {
         message: `${user.name} csatlakozott hozzád — mostantól közös a naplótok! 💛`,
         link: '/naplo',
       },
+    });
+    await sendMail({
+      to: partner.email,
+      ...coupleJoinedMail(partner.name, user.name, appUrl('/naplo')),
     });
   }
   revalidatePath('/', 'layout');

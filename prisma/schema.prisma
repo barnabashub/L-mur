@@ -13,13 +13,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  role         String   @default("USER") // USER | MODERATOR | ADMIN
-  status       String   @default("ACTIVE") // ACTIVE | SUSPENDED
-  createdAt    DateTime @default(now())
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  name            String
+  role            String    @default("USER") // USER | MODERATOR | ADMIN
+  status          String    @default("ACTIVE") // ACTIVE | SUSPENDED
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
 
   coupleId String?
   couple   Couple? @relation(fields: [coupleId], references: [id])
@@ -34,6 +35,44 @@ model User {
   moderationRequests ModerationRequest[]
   actionsGiven       ModerationAction[]  @relation("moderator")
   actionsReceived    ModerationAction[]  @relation("targetUser")
+  authTokens         AuthToken[]
+}
+
+// Egyszer használatos, lejáró tokenek (csak a hash-üket tároljuk).
+model AuthToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  type      String // PASSWORD_RESET | EMAIL_VERIFY
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, type])
+}
+
+// Kimenő e-mailek naplója. SMTP nélkül ez egyben a fejlesztői "postafiók".
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  text      String
+  status    String // SENT | LOGGED | FAILED
+  error     String?
+  createdAt DateTime @default(now())
+}
+
+// Évforduló-emlékeztetők deduplikálása: egy fordulóról egyszer értesítünk.
+model ReminderLog {
+  id              String   @id @default(cuid())
+  importantDateId String
+  importantDate   ImportantDate @relation(fields: [importantDateId], references: [id], onDelete: Cascade)
+  kind            String // yearly | monthly
+  occurrence      DateTime
+  createdAt       DateTime @default(now())
+
+  @@unique([importantDateId, kind, occurrence])
 }
 
 model Couple {
@@ -147,6 +186,7 @@ model ImportantDate {
   date          DateTime
   notifyYearly  Boolean  @default(true)
   notifyMonthly Boolean  @default(false)
+  reminderLogs  ReminderLog[]
 }
 
 model Partner {

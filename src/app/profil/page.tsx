@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { requireUser, partnerOf } from '@/lib/auth';
+import { resendVerification } from '@/lib/actions/auth';
 import { formatDate } from '@/lib/format';
 import { Stars } from '@/components/Stars';
 import { Flash } from '@/components/Flash';
@@ -39,7 +40,13 @@ export default async function ProfilePage({
       <section className="card p-6">
         <h1 className="text-2xl font-bold">{user.name}</h1>
         <p className="mt-1 text-sm text-stone-500">
-          {user.email} · csatlakozott: {formatDate(user.createdAt)}
+          {user.email}{' '}
+          {user.emailVerifiedAt ? (
+            <span className="badge bg-emerald-50 text-emerald-700">✓ megerősítve</span>
+          ) : (
+            <span className="badge bg-amber-50 text-amber-700">nincs megerősítve</span>
+          )}
+          {' '}· csatlakozott: {formatDate(user.createdAt)}
           {user.role !== 'USER' && (
             <span className="badge ml-2 bg-amber-50 text-amber-700">
               {user.role === 'ADMIN' ? 'admin' : 'moderátor'}
@@ -53,6 +60,11 @@ export default async function ProfilePage({
             <Link href="/par" className="text-rose-600 hover:underline">Kapcsold össze a fiókod a pároddal →</Link>
           )}
         </p>
+        {!user.emailVerifiedAt && (
+          <form action={resendVerification} className="mt-2">
+            <button className="btn-secondary text-xs">✉️ Megerősítő e-mail újraküldése</button>
+          </form>
+        )}
         <dl className="mt-4 grid grid-cols-3 gap-4 text-center">
           {[
             [completionCount, 'kipipált randi'],

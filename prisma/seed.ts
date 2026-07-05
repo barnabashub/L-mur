@@ -35,11 +35,13 @@ async function main() {
   const hash = await bcrypt.hash('titok123!', 10);
 
   const couple = await db.couple.create({ data: { inviteCode: 'ANNABE' } });
+  const verified = new Date();
   const [admin, mod, anna, bence, kata] = await Promise.all([
-    db.user.create({ data: { email: 'admin@kettesben.hu', name: 'Kettesben Admin', passwordHash: hash, role: 'ADMIN' } }),
-    db.user.create({ data: { email: 'mod@kettesben.hu', name: 'Moderátor Márta', passwordHash: hash, role: 'MODERATOR' } }),
-    db.user.create({ data: { email: 'anna@example.com', name: 'Kiss Anna', passwordHash: hash, coupleId: couple.id } }),
-    db.user.create({ data: { email: 'bence@example.com', name: 'Nagy Bence', passwordHash: hash, coupleId: couple.id } }),
+    db.user.create({ data: { email: 'admin@kettesben.hu', name: 'Kettesben Admin', passwordHash: hash, role: 'ADMIN', emailVerifiedAt: verified } }),
+    db.user.create({ data: { email: 'mod@kettesben.hu', name: 'Moderátor Márta', passwordHash: hash, role: 'MODERATOR', emailVerifiedAt: verified } }),
+    db.user.create({ data: { email: 'anna@example.com', name: 'Kiss Anna', passwordHash: hash, coupleId: couple.id, emailVerifiedAt: verified } }),
+    db.user.create({ data: { email: 'bence@example.com', name: 'Nagy Bence', passwordHash: hash, coupleId: couple.id, emailVerifiedAt: verified } }),
+    // Kata szándékosan megerősítetlen — így látszik a demóban a figyelmeztető sáv.
     db.user.create({ data: { email: 'kata@example.com', name: 'Szabó Kata', passwordHash: hash } }),
   ]);
 
@@ -342,11 +344,16 @@ async function main() {
     ],
   });
 
-  // Fontos dátumok Annáéknak.
+  // Fontos dátumok Annáéknak. A harmadik pár napon belüli évforduló, hogy az
+  // emlékeztető cron (api/cron/emlekeztetok) demózható legyen.
+  const soon = new Date();
+  soon.setDate(soon.getDate() + 3);
+  soon.setFullYear(soon.getFullYear() - 1);
   await db.importantDate.createMany({
     data: [
       { userId: anna.id, title: 'Megismerkedésünk napja', date: new Date('2024-09-21'), notifyYearly: true, notifyMonthly: true },
       { userId: bence.id, title: 'Első randink', date: new Date('2024-10-05'), notifyYearly: true, notifyMonthly: false },
+      { userId: anna.id, title: 'Első csókunk', date: soon, notifyYearly: true, notifyMonthly: false },
     ],
   });
 

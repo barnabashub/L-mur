@@ -6,6 +6,13 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireModerator } from '@/lib/auth';
 import { CATEGORIES } from '@/lib/constants';
 import { saveUpload } from '@/lib/uploads';
+import { appUrl, sendMail } from '@/lib/mail';
+import {
+  ideaApprovedMail,
+  ideaRejectedMail,
+  suspendedMail,
+  warningMail,
+} from '@/lib/mail-templates';
 import { bool, failTo, okTo, str } from './helpers';
 
 const MOD = '/moderacio';
@@ -23,7 +30,7 @@ async function logAction(data: {
 export async function approveIdea(formData: FormData) {
   const mod = await requireModerator();
   const id = str(formData, 'id');
-  const idea = await db.dateIdea.findUnique({ where: { id } });
+  const idea = await db.dateIdea.findUnique({ where: { id }, include: { submitter: true } });
   if (!idea || idea.status !== 'PENDING') failTo(MOD, 'A javaslat nem található.');
 
   await db.dateIdea.update({ where: { id }, data: { status: 'APPROVED', rejectionNote: null } });
@@ -36,6 +43,10 @@ export async function approveIdea(formData: FormData) {
       link: `/otletek/${id}`,
     },
   });
+  await sendMail({
+    to: idea.submitter.email,
+    ...ideaApprovedMail(idea.submitter.name, idea.title, appUrl(`/otletek/${id}`)),
+  });
   revalidatePath('/', 'layout');
   okTo(MOD, 'Az ötlet elfogadva és publikálva.');
 }
@@ -46,7 +57,7 @@ export async function rejectIdea(formData: FormData) {
   const message = str(formData, 'message');
   if (message.length < 5) failTo(MOD, 'Az elutasításhoz kötelező indoklást írni.');
 
-  const idea = await db.dateIdea.findUnique({ where: { id } });
+  const idea = await db.dateIdea.findUnique({ where: { id }, include: { submitter: true } });
   if (!idea || idea.status !== 'PENDING') failTo(MOD, 'A javaslat nem található.');
 
   await db.dateIdea.update({ where: { id }, data: { status: 'REJECTED', rejectionNote: message } });
@@ -58,6 +69,10 @@ export async function rejectIdea(formData: FormData) {
       message: `Az ötletedet („${idea.title}") most nem fogadtuk el. Indoklás: ${message}`,
       link: '/profil',
     },
+  });
+  await sendMail({
+    to: idea.submitter.email,
+    ...ideaRejectedMail(idea.submitter.name, idea.title, message),
   });
   revalidatePath('/', 'layout');
   okTo(MOD, 'A javaslat visszadobva, a beküldő értesítést kapott.');
@@ -185,6 +200,7 @@ export async function warnUser(formData: FormData) {
       message: `Moderátori figyelmeztetést kaptál: ${message}`,
     },
   });
+  await sendMail({ to: target.email, ...warningMail(target.name, message) });
   okTo(back, `${target.name} figyelmeztetve.`);
 }
 
@@ -199,6 +215,7 @@ export async function suspendUser(formData: FormData) {
 
   await db.user.update({ where: { id: userId }, data: { status: 'SUSPENDED' } });
   await logAction({ type: 'SUSPEND', moderatorId: mod.id, targetUserId: userId, message });
+  await sendMail({ to: target.email, ...suspendedMail(target.name, message) });
   revalidatePath(MOD);
   okTo(back, `${target.name} felfüggesztve.`);
 }

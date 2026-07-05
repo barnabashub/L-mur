@@ -156,7 +156,12 @@ App-on belüli értesítési központ: moderációs döntések, figyelmeztetése
 
 ## 7. Ütemterv (a jelen implementáción túli fázisok)
 
-**Fázis 2 — kommunikáció:** e-mail értesítések (moderációs döntés, évforduló), jelszó-visszaállítás, e-mail-megerősítés, web push.
+**Fázis 2 — kommunikáció:** ✅ **megvalósítva** — e-mail infrastruktúra (SMTP env-ből, enélkül
+adatbázisba naplózott „fejlesztői postafiók" a moderációs felületen), e-mail értesítések
+(moderációs döntés, figyelmeztetés, felfüggesztés, párkapcsolódás), jelszó-visszaállítás és
+e-mail-megerősítés egyszer használatos, hashelve tárolt tokenekkel, valamint évforduló-emlékeztető
+cron végpont (`/api/cron/emlekeztetok`, Bearer-titokkal, fordulónkénti dedupe-pal).
+A *web push* a HTTPS- és service-worker-igénye miatt a Fázis 5 (üzemeltetés) részeként ésszerű.
 **Fázis 3 — tartalom és felfedezés:** térképnézet (koordináták már a modellben előkészíthetők), címkék a kategóriák mellett, „ötlet a mai napra" ajánló, szezonális főoldali kiemelések, többnyelvűség (EN).
 **Fázis 4 — partnerprogram:** partner önkiszolgáló felület, kuponbeváltás-követés (egyedi kódok, statisztika), Három Királyfi mozgalom közös kampányai.
 **Fázis 5 — üzemeltetés:** PostgreSQL + S3, CI/CD, monitoring, rate limiting, CDN a képekhez, GDPR-export/törlés, mobilalkalmazás (a szerveroldal REST-re nyitható).

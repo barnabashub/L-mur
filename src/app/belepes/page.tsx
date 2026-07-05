@@ -24,6 +24,11 @@ export default async function LoginPage({
           <input className="input" type="password" id="password" name="password" required autoComplete="current-password" />
         </div>
         <button className="btn-primary w-full">Belépés</button>
+        <p className="text-center text-sm">
+          <Link href="/elfelejtett-jelszo" className="text-stone-500 hover:text-rose-600 hover:underline">
+            Elfelejtetted a jelszavadat?
+          </Link>
+        </p>
         <p className="text-center text-sm text-stone-500">
           Még nincs fiókod?{' '}
           <Link href="/regisztracio" className="font-medium text-rose-600 hover:underline">
