@@ -41,14 +41,14 @@ export function IdeaFormFields({ defaults = {} }: { defaults?: Defaults }) {
             defaultValue={defaults.locationName ?? ''} placeholder="pl. Budapest, Halászbástya" />
         </div>
       </div>
-      <label className="flex items-center gap-2 text-sm text-stone-700">
-        <input type="checkbox" name="isLocationIndependent" className="accent-rose-600"
+      <label className="flex items-center gap-2 text-sm text-ink/90">
+        <input type="checkbox" name="isLocationIndependent" className="accent-violet-500"
           defaultChecked={defaults.isLocationIndependent ?? false} />
         Helyfüggetlen ötlet (bárhol megvalósítható)
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex items-center gap-2 text-sm text-stone-700">
-          <input type="checkbox" name="isSeasonal" className="accent-rose-600"
+        <label className="flex items-center gap-2 text-sm text-ink/90">
+          <input type="checkbox" name="isSeasonal" className="accent-violet-500"
             defaultChecked={defaults.isSeasonal ?? false} />
           Időpontfüggő / szezonális
         </label>

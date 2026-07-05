@@ -22,7 +22,7 @@ export default async function PartnersPage({
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Partnereink 🤝</h1>
-        <p className="mt-1 max-w-2xl text-sm text-stone-600">
+        <p className="mt-1 max-w-2xl text-sm text-mute">
           Olyan helyekkel és szervezetekkel dolgozunk együtt, akik hisznek abban, hogy a
           párkapcsolatokba érdemes időt fektetni. A Kettesben-felhasználók a partnereinknél
           kedvezményt kapnak a randijukhoz — a kuponkódot bejelentkezés után az ötlet oldalán
@@ -34,30 +34,30 @@ export default async function PartnersPage({
       <div className="grid gap-5 sm:grid-cols-2">
         {partners.map((p) => (
           <section key={p.id} className="card p-6">
-            <h2 className="font-bold text-stone-900">{p.name}</h2>
-            {p.description && <p className="mt-1 text-sm text-stone-600">{p.description}</p>}
-            <p className="mt-3 text-sm font-medium text-amber-800">🎟️ {p.discountText}</p>
+            <h2 className="font-bold text-ink">{p.name}</h2>
+            {p.description && <p className="mt-1 text-sm text-mute">{p.description}</p>}
+            <p className="mt-3 text-sm font-medium text-amber-800 dark:text-amber-200">🎟️ {p.discountText}</p>
             {user && (
-              <p className="mt-2 inline-block rounded-lg border border-dashed border-amber-400 bg-amber-50 px-3 py-1 font-mono font-bold tracking-widest text-amber-800">
+              <p className="mt-2 inline-block rounded-lg border border-dashed border-amber-400 bg-amber-100 dark:bg-amber-400/15 px-3 py-1 font-mono font-bold tracking-widest text-amber-800 dark:text-amber-200">
                 {p.couponCode}
               </p>
             )}
             {p.website && (
               <p className="mt-2 text-sm">
-                <a href={p.website} target="_blank" rel="noreferrer" className="text-rose-600 hover:underline">
+                <a href={p.website} target="_blank" rel="noreferrer" className="text-brand hover:underline">
                   {p.website}
                 </a>
               </p>
             )}
             {p.ideas.length > 0 && (
-              <div className="mt-3 border-t border-stone-100 pt-3 text-sm">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-stone-400">
+              <div className="mt-3 border-t border-edge pt-3 text-sm">
+                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-faint">
                   Kapcsolódó randiötletek
                 </p>
                 <ul className="space-y-1">
                   {p.ideas.map((i) => (
                     <li key={i.id}>
-                      <Link href={`/otletek/${i.id}`} className="text-rose-600 hover:underline">
+                      <Link href={`/otletek/${i.id}`} className="text-brand hover:underline">
                         {i.title}
                       </Link>
                     </li>
@@ -70,9 +70,9 @@ export default async function PartnersPage({
       </div>
 
       {!user && (
-        <p className="card p-6 text-sm text-stone-500">
-          A kuponkódokhoz <Link href="/belepes" className="font-medium text-rose-600 hover:underline">lépj be</Link>{' '}
-          vagy <Link href="/regisztracio" className="font-medium text-rose-600 hover:underline">regisztrálj</Link>.
+        <p className="card p-6 text-sm text-mute">
+          A kuponkódokhoz <Link href="/belepes" className="font-medium text-brand hover:underline">lépj be</Link>{' '}
+          vagy <Link href="/regisztracio" className="font-medium text-brand hover:underline">regisztrálj</Link>.
         </p>
       )}
 

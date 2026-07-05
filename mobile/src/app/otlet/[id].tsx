@@ -4,7 +4,7 @@ import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-rou
 import * as ImagePicker from 'expo-image-picker';
 import { api, imageUrl, type IdeaDetail, type ListSummary } from '../../lib/api';
 import { useAuth } from '../../lib/auth-context';
-import { colors, spacing } from '../../lib/theme';
+import { spacing, useTheme } from '../../lib/theme'
 import { Badge, Button, Card, Empty, ErrorText, Input, Label, StarPicker, Stars } from '../../components/ui';
 
 function formatDate(d: string) {
@@ -12,6 +12,7 @@ function formatDate(d: string) {
 }
 
 export default function IdeaScreen() {
+  const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { token } = useAuth();
   const router = useRouter();
@@ -135,22 +136,22 @@ export default function IdeaScreen() {
             />
             {idea.isSeasonal && idea.seasonLabel && <Badge text={`📅 ${idea.seasonLabel}`} tone="muted" />}
           </View>
-          <Text style={{ fontSize: 22, fontWeight: '800', color: colors.text }}>{idea.title}</Text>
+          <Text style={{ fontSize: 22, fontWeight: '800', color: t.text }}>{idea.title}</Text>
           <View style={{ flexDirection: 'row', gap: spacing.l, alignItems: 'center' }}>
             <Stars value={idea.avg} count={idea.reviews.length} />
-            <Text style={{ fontSize: 12, color: colors.muted }}>✔ {idea.completionCount} teljesítés</Text>
+            <Text style={{ fontSize: 12, color: t.muted }}>✔ {idea.completionCount} teljesítés</Text>
           </View>
-          <Text style={{ fontSize: 14, lineHeight: 21, color: colors.text }}>{idea.description}</Text>
-          <Text style={{ fontSize: 11, color: colors.faint }}>
+          <Text style={{ fontSize: 14, lineHeight: 21, color: t.text }}>{idea.description}</Text>
+          <Text style={{ fontSize: 11, color: t.faint }}>
             Feltöltötte: {idea.submitterName} · {formatDate(idea.createdAt)} · frissítve: {formatDate(idea.updatedAt)}
           </Text>
         </View>
       </Card>
 
       {idea.partner && (
-        <Card style={{ backgroundColor: colors.amberBg, borderColor: '#fde68a', gap: 6 }}>
-          <Text style={{ fontWeight: '700', color: colors.amber }}>🎟️ Kedvezmény a Kettesben-pároknak</Text>
-          <Text style={{ fontSize: 13, color: colors.amber }}>
+        <Card style={{ backgroundColor: t.amberBg, borderColor: 'rgba(251, 191, 36, 0.4)', gap: 6 }}>
+          <Text style={{ fontWeight: '700', color: t.amber }}>🎟️ Kedvezmény a Kettesben-pároknak</Text>
+          <Text style={{ fontSize: 13, color: t.amber }}>
             {idea.partner.name}: {idea.partner.discountText}
           </Text>
           {idea.partner.couponCode ? (
@@ -159,8 +160,8 @@ export default function IdeaScreen() {
                 fontSize: 20,
                 fontWeight: '800',
                 letterSpacing: 4,
-                color: colors.amber,
-                backgroundColor: '#fff',
+                color: t.amber,
+                backgroundColor: t.card,
                 borderRadius: 8,
                 paddingVertical: 6,
                 textAlign: 'center',
@@ -170,21 +171,21 @@ export default function IdeaScreen() {
               {idea.partner.couponCode}
             </Text>
           ) : (
-            <Text style={{ fontSize: 12, color: colors.amber }}>A kuponkódhoz lépj be a Profil fülön.</Text>
+            <Text style={{ fontSize: 12, color: t.amber }}>A kuponkódhoz lépj be a Profil fülön.</Text>
           )}
         </Card>
       )}
 
       <ErrorText text={error} />
       {info && (
-        <Card style={{ backgroundColor: colors.greenBg, borderColor: '#a7f3d0' }}>
-          <Text style={{ color: colors.green, fontSize: 13 }}>{info}</Text>
+        <Card style={{ backgroundColor: t.greenBg, borderColor: 'rgba(52, 211, 153, 0.4)' }}>
+          <Text style={{ color: t.green, fontSize: 13 }}>{info}</Text>
         </Card>
       )}
 
       <Card style={{ gap: spacing.s }}>
-        <Text style={{ fontWeight: '800', fontSize: 16, color: colors.text }}>Kipipálom ✔</Text>
-        <Text style={{ fontSize: 12, color: colors.muted }}>
+        <Text style={{ fontWeight: '800', fontSize: 16, color: t.text }}>Kipipálom ✔</Text>
+        <Text style={{ fontSize: 12, color: t.muted }}>
           A privát részeket csak ti ketten látjátok.
         </Text>
         <Label text="Publikus élménybeszámoló (opcionális)" />
@@ -193,12 +194,12 @@ export default function IdeaScreen() {
         <Input value={privateText} onChangeText={setPrivateText} multiline numberOfLines={3} />
         <Button title={image ? `📷 Fotó kiválasztva ✔` : '📷 Fotó hozzáadása'} variant="secondary" onPress={pickImage} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.s }}>
-          <Switch value={imagePublic} onValueChange={setImagePublic} trackColor={{ true: colors.primary }} />
-          <Text style={{ fontSize: 13, color: colors.text, flex: 1 }}>A fotó lehet publikus</Text>
+          <Switch value={imagePublic} onValueChange={setImagePublic} trackColor={{ true: t.primary }} />
+          <Text style={{ fontSize: 13, color: t.text, flex: 1 }}>A fotó lehet publikus</Text>
         </View>
         <Button title="Kipipálom, megvolt! 🎉" onPress={complete} loading={busy} />
         {idea.myCompletions.length > 0 && (
-          <Text style={{ fontSize: 12, color: colors.muted }}>
+          <Text style={{ fontSize: 12, color: t.muted }}>
             Korábbi teljesítéseitek: {idea.myCompletions.map((c) => formatDate(c.date)).join(', ')}
           </Text>
         )}
@@ -206,7 +207,7 @@ export default function IdeaScreen() {
 
       {myLists.length > 0 && (
         <Card style={{ gap: spacing.s }}>
-          <Text style={{ fontWeight: '700', color: colors.text }}>Bakancslistára teszem</Text>
+          <Text style={{ fontWeight: '700', color: t.text }}>Bakancslistára teszem</Text>
           {myLists.map((l) => (
             <Button key={l.id} title={`+ ${l.title}`} variant="secondary" onPress={() => addTo(l.id)} />
           ))}
@@ -214,7 +215,7 @@ export default function IdeaScreen() {
       )}
 
       <Card style={{ gap: spacing.s }}>
-        <Text style={{ fontWeight: '800', fontSize: 16, color: colors.text }}>Értékelés ⭐</Text>
+        <Text style={{ fontWeight: '800', fontSize: 16, color: t.text }}>Értékelés ⭐</Text>
         <StarPicker value={stars} onChange={setStars} />
         <Input value={reviewText} onChangeText={setReviewText} placeholder="Pár mondat a tapasztalatokról…" multiline />
         <Button title="Értékelés küldése" onPress={sendReview} disabled={stars === 0} />
@@ -222,7 +223,7 @@ export default function IdeaScreen() {
 
       {idea.publicCompletions.length > 0 && (
         <View style={{ gap: spacing.s }}>
-          <Text style={{ fontWeight: '800', fontSize: 16, color: colors.text }}>
+          <Text style={{ fontWeight: '800', fontSize: 16, color: t.text }}>
             Párok, akik már teljesítették 📸
           </Text>
           {idea.publicCompletions.map((c) => {
@@ -231,9 +232,9 @@ export default function IdeaScreen() {
               <Card key={c.id} style={{ padding: 0, overflow: 'hidden' }}>
                 {cImg && <Image source={{ uri: cImg }} style={{ width: '100%', height: 160 }} />}
                 <View style={{ padding: spacing.m, gap: 4 }}>
-                  {!!c.publicText && <Text style={{ fontSize: 13, color: colors.text }}>„{c.publicText}"</Text>}
-                  {!!c.privateText && <Text style={{ fontSize: 13, color: colors.muted }}>🔒 {c.privateText}</Text>}
-                  <Text style={{ fontSize: 11, color: colors.faint }}>
+                  {!!c.publicText && <Text style={{ fontSize: 13, color: t.text }}>„{c.publicText}"</Text>}
+                  {!!c.privateText && <Text style={{ fontSize: 13, color: t.muted }}>🔒 {c.privateText}</Text>}
+                  <Text style={{ fontSize: 11, color: t.faint }}>
                     {c.userName} · {formatDate(c.date)}
                   </Text>
                 </View>
@@ -244,7 +245,7 @@ export default function IdeaScreen() {
       )}
 
       <View style={{ gap: spacing.s, marginBottom: spacing.xl }}>
-        <Text style={{ fontWeight: '800', fontSize: 16, color: colors.text }}>Értékelések</Text>
+        <Text style={{ fontWeight: '800', fontSize: 16, color: t.text }}>Értékelések</Text>
         {idea.reviews.length === 0 ? (
           <Empty text="Még senki sem értékelte — legyetek ti az elsők!" />
         ) : (
@@ -252,11 +253,11 @@ export default function IdeaScreen() {
             <Card key={r.id} style={{ gap: 4 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Stars value={r.stars} />
-                <Text style={{ fontSize: 11, color: colors.faint }}>
+                <Text style={{ fontSize: 11, color: t.faint }}>
                   {r.userName} · {formatDate(r.createdAt)}
                 </Text>
               </View>
-              {!!r.text && <Text style={{ fontSize: 13, color: colors.text }}>{r.text}</Text>}
+              {!!r.text && <Text style={{ fontSize: 13, color: t.text }}>{r.text}</Text>}
             </Card>
           ))
         )}

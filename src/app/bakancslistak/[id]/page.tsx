@@ -60,12 +60,12 @@ export default async function ListPage({
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-stone-400">
-            <Link href="/bakancslistak" className="hover:text-rose-600">Bakancslisták</Link> /
+          <p className="text-sm text-faint">
+            <Link href="/bakancslistak" className="hover:text-brand">Bakancslisták</Link> /
           </p>
           <h1 className="text-2xl font-bold">{list.isSystem && '⭐ '}{list.title}</h1>
-          {list.description && <p className="mt-1 text-stone-600">{list.description}</p>}
-          <p className="mt-1 text-xs text-stone-400">
+          {list.description && <p className="mt-1 text-mute">{list.description}</p>}
+          <p className="mt-1 text-xs text-faint">
             {list.isSystem ? 'Gyári lista a Kettesben csapatától' : `Saját listátok`}
           </p>
         </div>
@@ -79,10 +79,10 @@ export default async function ListPage({
 
       {user && visibleItems.length > 0 && (
         <div className="card p-5">
-          <div className="h-3 overflow-hidden rounded-full bg-stone-100">
-            <div className="h-full rounded-full bg-rose-500 transition-all" style={{ width: `${pct}%` }} />
+          <div className="h-3 overflow-hidden rounded-full bg-soft">
+            <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${pct}%` }} />
           </div>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="mt-2 text-sm text-mute">
             <strong>{done}</strong> / {visibleItems.length} teljesítve ({pct}%)
             {pct === 100 && ' — gratulálunk, a lista teljesítve! 🎉'}
           </p>
@@ -90,8 +90,8 @@ export default async function ListPage({
       )}
 
       {visibleItems.length === 0 ? (
-        <p className="card p-10 text-center text-stone-500">
-          Ez a lista még üres. Böngéssz az <Link href="/otletek" className="text-rose-600 hover:underline">ötletek</Link>{' '}
+        <p className="card p-10 text-center text-mute">
+          Ez a lista még üres. Böngéssz az <Link href="/otletek" className="text-brand hover:underline">ötletek</Link>{' '}
           között, és add hozzá őket!
         </p>
       ) : (
@@ -113,7 +113,7 @@ export default async function ListPage({
               {isOwner && (
                 <form action={removeFromList} className="mt-2 text-right">
                   <input type="hidden" name="itemId" value={item.id} />
-                  <button className="text-xs text-stone-400 hover:text-red-600">Eltávolítás a listáról</button>
+                  <button className="text-xs text-faint hover:text-red-600 dark:text-red-400">Eltávolítás a listáról</button>
                 </form>
               )}
             </div>

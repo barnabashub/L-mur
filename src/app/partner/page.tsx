@@ -39,7 +39,7 @@ export default async function PartnerDashboard({
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Partnerfelület — {partner.name} 🤝</h1>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-mute">
           Aktuális ajánlat: {partner.discountText}
         </p>
       </div>
@@ -52,15 +52,15 @@ export default async function PartnerDashboard({
           [issued ? Math.round((redeemed / issued) * 100) + '%' : '–', 'beváltási arány'],
         ].map(([n, label]) => (
           <div key={label as string} className="card p-6 text-center">
-            <p className="text-3xl font-bold text-rose-600">{n as string}</p>
-            <p className="mt-1 text-xs text-stone-500">{label as string}</p>
+            <p className="text-3xl font-bold text-brand">{n as string}</p>
+            <p className="mt-1 text-xs text-mute">{label as string}</p>
           </div>
         ))}
       </section>
 
       <section className="card p-6">
         <h2 className="mb-1 text-lg font-bold">Kupon beváltása a helyszínen</h2>
-        <p className="mb-4 text-sm text-stone-500">
+        <p className="mb-4 text-sm text-mute">
           Kérd el a vendégtől az egyedi kódját (KET-…), és írd be ide.
         </p>
         <form action={redeemCoupon} className="flex flex-wrap gap-2">
@@ -81,7 +81,7 @@ export default async function PartnerDashboard({
             {partner.ideas.map((i) => (
               <li key={i.id} className="flex justify-between gap-2">
                 <span>{i.title}</span>
-                <span className="text-stone-500">{perIdea.get(i.id) ?? 0} beváltás</span>
+                <span className="text-mute">{perIdea.get(i.id) ?? 0} beváltás</span>
               </li>
             ))}
           </ul>
@@ -91,20 +91,20 @@ export default async function PartnerDashboard({
       <section>
         <h2 className="mb-3 text-lg font-bold">Legutóbbi kuponok</h2>
         {partner.redemptions.length === 0 ? (
-          <p className="card p-8 text-center text-sm text-stone-500">Még nem kértek kupont hozzátok.</p>
+          <p className="card p-8 text-center text-sm text-mute">Még nem kértek kupont hozzátok.</p>
         ) : (
           <ul className="space-y-2">
             {partner.redemptions.slice(0, 20).map((r) => (
               <li key={r.id} className="card flex flex-wrap items-center gap-2 p-3 text-sm">
                 <span className="font-mono font-bold">{r.code}</span>
-                <span className="text-stone-500">{r.user.name}</span>
+                <span className="text-mute">{r.user.name}</span>
                 <span className="ml-auto text-xs">
                   {r.redeemedAt ? (
-                    <span className="badge bg-emerald-50 text-emerald-700">
+                    <span className="badge-green">
                       beváltva: {formatDateTime(r.redeemedAt)}
                     </span>
                   ) : (
-                    <span className="badge bg-sky-50 text-sky-700">kiadva: {formatDateTime(r.createdAt)}</span>
+                    <span className="badge-sky">kiadva: {formatDateTime(r.createdAt)}</span>
                   )}
                 </span>
               </li>

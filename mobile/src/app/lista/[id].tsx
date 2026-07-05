@@ -3,11 +3,12 @@ import { FlatList, Text, View } from 'react-native';
 import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { api, type ListDetail } from '../../lib/api';
 import { useAuth } from '../../lib/auth-context';
-import { colors, spacing } from '../../lib/theme';
+import { spacing, useTheme } from '../../lib/theme'
 import { IdeaCard } from '../../components/IdeaCard';
 import { Card, Empty, ErrorText } from '../../components/ui';
 
 export default function ListScreen() {
+  const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { token } = useAuth();
   const [list, setList] = useState<ListDetail | null>(null);
@@ -46,13 +47,13 @@ export default function ListScreen() {
       ListHeaderComponent={
         <View style={{ gap: spacing.m, marginBottom: spacing.m }}>
           <Stack.Screen options={{ title: list.title }} />
-          {!!list.description && <Text style={{ color: colors.muted, fontSize: 13 }}>{list.description}</Text>}
+          {!!list.description && <Text style={{ color: t.muted, fontSize: 13 }}>{list.description}</Text>}
           {token && list.items.length > 0 && (
             <Card>
-              <View style={{ height: 8, backgroundColor: '#f5f5f4', borderRadius: 999, overflow: 'hidden' }}>
-                <View style={{ height: 8, width: `${pct}%`, backgroundColor: colors.primary, borderRadius: 999 }} />
+              <View style={{ height: 8, backgroundColor: t.bg, borderRadius: 999, overflow: 'hidden' }}>
+                <View style={{ height: 8, width: `${pct}%`, backgroundColor: t.primary, borderRadius: 999 }} />
               </View>
-              <Text style={{ fontSize: 13, color: colors.text, marginTop: spacing.s }}>
+              <Text style={{ fontSize: 13, color: t.text, marginTop: spacing.s }}>
                 <Text style={{ fontWeight: '800' }}>{done}</Text> / {list.items.length} teljesítve ({pct}%)
                 {pct === 100 ? ' — gratulálunk! 🎉' : ''}
               </Text>

@@ -10,9 +10,9 @@ import { Flash } from '@/components/Flash';
 export const metadata = { title: 'Profilom' };
 
 const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
-  PENDING: { text: 'moderációra vár', cls: 'bg-amber-50 text-amber-700' },
-  APPROVED: { text: 'elfogadva', cls: 'bg-emerald-50 text-emerald-700' },
-  REJECTED: { text: 'visszadobva', cls: 'bg-red-50 text-red-700' },
+  PENDING: { text: 'moderációra vár', cls: 'badge-amber' },
+  APPROVED: { text: 'elfogadva', cls: 'badge-green' },
+  REJECTED: { text: 'visszadobva', cls: 'badge-red' },
 };
 
 export default async function ProfilePage({
@@ -45,25 +45,25 @@ export default async function ProfilePage({
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
       <section className="card p-6">
         <h1 className="text-2xl font-bold">{user.name}</h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <p className="mt-1 text-sm text-mute">
           {user.email}{' '}
           {user.emailVerifiedAt ? (
-            <span className="badge bg-emerald-50 text-emerald-700">✓ megerősítve</span>
+            <span className="badge-green">✓ megerősítve</span>
           ) : (
-            <span className="badge bg-amber-50 text-amber-700">nincs megerősítve</span>
+            <span className="badge-amber">nincs megerősítve</span>
           )}
           {' '}· csatlakozott: {formatDate(user.createdAt)}
           {user.role !== 'USER' && (
-            <span className="badge ml-2 bg-amber-50 text-amber-700">
+            <span className="badge-amber ml-2">
               {user.role === 'ADMIN' ? 'admin' : 'moderátor'}
             </span>
           )}
         </p>
-        <p className="mt-1 text-sm text-stone-500">
+        <p className="mt-1 text-sm text-mute">
           {partner ? (
             <>Párod: <strong>{partner.name}</strong></>
           ) : (
-            <Link href="/par" className="text-rose-600 hover:underline">Kapcsold össze a fiókod a pároddal →</Link>
+            <Link href="/par" className="text-brand hover:underline">Kapcsold össze a fiókod a pároddal →</Link>
           )}
         </p>
         {!user.emailVerifiedAt && (
@@ -77,9 +77,9 @@ export default async function ProfilePage({
             [ideas.length, 'beküldött ötlet'],
             [listCount, 'saját lista'],
           ].map(([n, label]) => (
-            <div key={label as string} className="rounded-xl bg-stone-50 py-3">
-              <dd className="text-xl font-bold text-rose-600">{n as number}</dd>
-              <dt className="text-xs text-stone-500">{label as string}</dt>
+            <div key={label as string} className="rounded-xl bg-soft py-3">
+              <dd className="text-xl font-bold text-brand">{n as number}</dd>
+              <dt className="text-xs text-mute">{label as string}</dt>
             </div>
           ))}
         </dl>
@@ -88,8 +88,8 @@ export default async function ProfilePage({
       <section>
         <h2 className="mb-3 text-lg font-bold">Beküldött ötleteim</h2>
         {ideas.length === 0 ? (
-          <p className="card p-6 text-sm text-stone-500">
-            Még nem küldtél be ötletet. <Link href="/otletek/uj" className="text-rose-600 hover:underline">Itt az alkalom! →</Link>
+          <p className="card p-6 text-sm text-mute">
+            Még nem küldtél be ötletet. <Link href="/otletek/uj" className="text-brand hover:underline">Itt az alkalom! →</Link>
           </p>
         ) : (
           <ul className="space-y-3">
@@ -98,12 +98,12 @@ export default async function ProfilePage({
               return (
                 <li key={idea.id} className="card flex flex-wrap items-center gap-3 p-4 text-sm">
                   <div>
-                    <Link href={`/otletek/${idea.id}`} className="font-semibold hover:text-rose-700">
+                    <Link href={`/otletek/${idea.id}`} className="font-semibold hover:text-brand">
                       {idea.title}
                     </Link>
-                    <p className="text-xs text-stone-400">beküldve: {formatDate(idea.createdAt)}</p>
+                    <p className="text-xs text-faint">beküldve: {formatDate(idea.createdAt)}</p>
                     {idea.status === 'REJECTED' && idea.rejectionNote && (
-                      <p className="mt-1 text-xs text-red-600">Indoklás: {idea.rejectionNote}</p>
+                      <p className="mt-1 text-xs text-red-600 dark:text-red-400">Indoklás: {idea.rejectionNote}</p>
                     )}
                   </div>
                   <span className={`badge ml-auto ${s.cls}`}>{s.text}</span>
@@ -121,12 +121,12 @@ export default async function ProfilePage({
             {coupons.map((c) => (
               <li key={c.id} className="card flex flex-wrap items-center gap-2 p-3 text-sm">
                 <span className="font-mono font-bold">{c.code}</span>
-                <span className="text-stone-500">{c.partner.name}</span>
+                <span className="text-mute">{c.partner.name}</span>
                 <span className="ml-auto">
                   {c.redeemedAt ? (
-                    <span className="badge bg-stone-100 text-stone-500">beváltva: {formatDateTime(c.redeemedAt)}</span>
+                    <span className="badge-soft">beváltva: {formatDateTime(c.redeemedAt)}</span>
                   ) : (
-                    <span className="badge bg-emerald-50 text-emerald-700">aktív — mutasd fel a helyszínen</span>
+                    <span className="badge-green">aktív — mutasd fel a helyszínen</span>
                   )}
                 </span>
               </li>
@@ -138,12 +138,12 @@ export default async function ProfilePage({
       <section>
         <h2 className="mb-3 text-lg font-bold">Értékeléseim</h2>
         {reviews.length === 0 ? (
-          <p className="card p-6 text-sm text-stone-500">Még nem értékeltél ötletet.</p>
+          <p className="card p-6 text-sm text-mute">Még nem értékeltél ötletet.</p>
         ) : (
           <ul className="space-y-3">
             {reviews.map((r) => (
               <li key={r.id} className="card flex flex-wrap items-center gap-3 p-4 text-sm">
-                <Link href={`/otletek/${r.idea.id}`} className="font-semibold hover:text-rose-700">
+                <Link href={`/otletek/${r.idea.id}`} className="font-semibold hover:text-brand">
                   {r.idea.title}
                 </Link>
                 <span className="ml-auto"><Stars value={r.stars} /></span>
@@ -153,9 +153,9 @@ export default async function ProfilePage({
         )}
       </section>
 
-      <section className="card border-stone-300 p-6">
+      <section className="card border-edge p-6">
         <h2 className="mb-1 text-lg font-bold">Adataim és fiókom ⚙️</h2>
-        <p className="mb-4 text-sm text-stone-500">
+        <p className="mb-4 text-sm text-mute">
           A GDPR szerint bármikor letöltheted az összes adatodat, vagy véglegesen törölheted a fiókodat.
         </p>
         <a href="/api/export" className="btn-secondary" download>
@@ -164,7 +164,7 @@ export default async function ProfilePage({
         <details className="mt-4">
           <summary className="cursor-pointer text-sm font-semibold text-red-700">Fiók végleges törlése…</summary>
           <form action={deleteAccount} className="mt-3 max-w-md space-y-3">
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-mute">
               A pipáid, emlékeid, értékeléseid, listáid és dátumaid véglegesen törlődnek. A közösségnek
               elfogadott ötleteid név nélkül megmaradnak. Ez a művelet nem vonható vissza!
             </p>

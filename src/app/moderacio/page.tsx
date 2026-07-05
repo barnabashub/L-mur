@@ -42,7 +42,7 @@ export default async function ModerationPage({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Moderátori felület 🛡️</h1>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-mute">
           {pendingCount} javaslat és {openRequestCount} kérés vár elbírálásra.
         </p>
       </div>
@@ -53,7 +53,7 @@ export default async function ModerationPage({
           <Link
             key={t.key}
             href={`/moderacio?nezet=${t.key}`}
-            className={`btn ${tab === t.key ? 'bg-rose-600 text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'}`}
+            className={`btn ${tab === t.key ? 'bg-brand-strong text-white' : 'bg-white text-mute border border-edge hover:bg-soft'}`}
           >
             {t.label}
             {t.key === 'javaslatok' && pendingCount > 0 && ` (${pendingCount})`}
@@ -79,7 +79,7 @@ async function PendingIdeas() {
   });
 
   if (pending.length === 0) {
-    return <p className="card p-10 text-center text-stone-500">Nincs elbírálásra váró javaslat. 🎉</p>;
+    return <p className="card p-10 text-center text-mute">Nincs elbírálásra váró javaslat. 🎉</p>;
   }
   return (
     <div className="space-y-6">
@@ -89,20 +89,20 @@ async function PendingIdeas() {
             <IdeaImage imagePath={idea.imagePath} category={idea.category} title={idea.title} className="h-40 w-full sm:h-full" />
             <div className="space-y-3 p-5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="badge bg-rose-50 text-rose-700">{idea.category}</span>
-                <span className="badge bg-stone-100 text-stone-600">
+                <span className="badge-brand">{idea.category}</span>
+                <span className="badge-soft">
                   {idea.isLocationIndependent ? '🌍 Helyfüggetlen' : `📍 ${idea.locationName}`}
                 </span>
                 {idea.isSeasonal && idea.seasonLabel && (
-                  <span className="badge bg-sky-50 text-sky-700">📅 {idea.seasonLabel}</span>
+                  <span className="badge-sky">📅 {idea.seasonLabel}</span>
                 )}
               </div>
               <h2 className="text-lg font-bold">{idea.title}</h2>
-              <p className="whitespace-pre-line text-sm text-stone-600">{idea.description}</p>
-              <p className="text-xs text-stone-400">
+              <p className="whitespace-pre-line text-sm text-mute">{idea.description}</p>
+              <p className="text-xs text-faint">
                 Beküldte: {idea.submitter.name} ({idea.submitter.email}) · {formatDateTime(idea.createdAt)}
               </p>
-              <div className="flex flex-wrap items-start gap-3 border-t border-stone-100 pt-3">
+              <div className="flex flex-wrap items-start gap-3 border-t border-edge pt-3">
                 <form action={approveIdea}>
                   <input type="hidden" name="id" value={idea.id} />
                   <button className="btn-primary">✔ Elfogadás és publikálás</button>
@@ -134,19 +134,19 @@ async function OpenRequests() {
   });
 
   if (requests.length === 0) {
-    return <p className="card p-10 text-center text-stone-500">Nincs nyitott moderációs kérés. 🎉</p>;
+    return <p className="card p-10 text-center text-mute">Nincs nyitott moderációs kérés. 🎉</p>;
   }
   return (
     <div className="space-y-4">
       {requests.map((r) => (
         <section key={r.id} className="card space-y-3 p-5">
           <p className="text-sm">
-            <Link href={`/otletek/${r.idea.id}`} className="font-semibold text-rose-700 hover:underline">
+            <Link href={`/otletek/${r.idea.id}`} className="font-semibold text-brand-strong dark:text-violet-200 hover:underline">
               {r.idea.title}
             </Link>
-            <span className="text-stone-400"> · jelezte: {r.user.name} · {formatDateTime(r.createdAt)}</span>
+            <span className="text-faint"> · jelezte: {r.user.name} · {formatDateTime(r.createdAt)}</span>
           </p>
-          <p className="rounded-lg bg-stone-50 px-3 py-2 text-sm text-stone-700">„{r.message}"</p>
+          <p className="rounded-lg bg-soft px-3 py-2 text-sm text-ink/90">„{r.message}"</p>
           <div className="flex flex-wrap gap-3">
             <Link href={`/moderacio/otlet/${r.idea.id}`} className="btn-secondary">✏️ Ötlet szerkesztése</Link>
             <form action={resolveRequest} className="flex min-w-60 flex-1 gap-2">
@@ -180,15 +180,15 @@ async function Users({ actorRole, actorId }: { actorRole: string; actorId: strin
                 <p className="font-semibold">
                   {u.name}
                   {u.role !== 'USER' && (
-                    <span className="badge ml-2 bg-amber-50 text-amber-700">
+                    <span className="badge-amber ml-2">
                       {u.role === 'ADMIN' ? 'admin' : 'moderátor'}
                     </span>
                   )}
                   {u.status === 'SUSPENDED' && (
-                    <span className="badge ml-2 bg-red-50 text-red-700">felfüggesztve</span>
+                    <span className="badge-red ml-2">felfüggesztve</span>
                   )}
                 </p>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-faint">
                   {u.email} · csatlakozott: {formatDate(u.createdAt)} · {u._count.ideas} ötlet,{' '}
                   {u._count.completions} pipa
                 </p>
@@ -203,7 +203,7 @@ async function Users({ actorRole, actorId }: { actorRole: string; actorId: strin
               )}
             </div>
             {!untouchable && (
-              <div className="flex flex-wrap gap-3 border-t border-stone-100 pt-3">
+              <div className="flex flex-wrap gap-3 border-t border-edge pt-3">
                 <form action={warnUser} className="flex min-w-60 flex-1 gap-2">
                   <input type="hidden" name="userId" value={u.id} />
                   <input className="input" name="message" required minLength={5}
@@ -252,7 +252,7 @@ async function AuditLog() {
   };
 
   if (actions.length === 0) {
-    return <p className="card p-10 text-center text-stone-500">Még nincs moderátori művelet.</p>;
+    return <p className="card p-10 text-center text-mute">Még nincs moderátori művelet.</p>;
   }
   return (
     <ul className="space-y-2">
@@ -262,14 +262,14 @@ async function AuditLog() {
           {a.idea && (
             <>
               {' '}
-              <Link href={`/otletek/${a.idea.id}`} className="text-rose-600 hover:underline">
+              <Link href={`/otletek/${a.idea.id}`} className="text-brand hover:underline">
                 „{a.idea.title}"
               </Link>
             </>
           )}
           {a.targetUser && <> — {a.targetUser.name}</>}
-          {a.message && <span className="text-stone-500"> · „{a.message}"</span>}
-          <span className="float-right text-xs text-stone-400">{formatDateTime(a.createdAt)}</span>
+          {a.message && <span className="text-mute"> · „{a.message}"</span>}
+          <span className="float-right text-xs text-faint">{formatDateTime(a.createdAt)}</span>
         </li>
       ))}
     </ul>
@@ -280,31 +280,31 @@ async function EmailLogView() {
   const emails = await db.emailLog.findMany({ orderBy: { createdAt: 'desc' }, take: 50 });
 
   const STATUS_BADGE: Record<string, string> = {
-    SENT: 'bg-emerald-50 text-emerald-700',
-    LOGGED: 'bg-sky-50 text-sky-700',
-    FAILED: 'bg-red-50 text-red-700',
+    SENT: 'badge-green',
+    LOGGED: 'badge-sky',
+    FAILED: 'badge-red',
   };
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-stone-500">
-        A rendszer által küldött e-mailek. A <span className="badge bg-sky-50 text-sky-700">LOGGED</span>{' '}
+      <p className="text-sm text-mute">
+        A rendszer által küldött e-mailek. A <span className="badge-sky">LOGGED</span>{' '}
         státusz azt jelenti, hogy nincs SMTP beállítva (fejlesztői mód) — a levél csak itt, a
         naplóban jelent meg.
       </p>
       {emails.length === 0 ? (
-        <p className="card p-10 text-center text-stone-500">Még nem ment ki e-mail.</p>
+        <p className="card p-10 text-center text-mute">Még nem ment ki e-mail.</p>
       ) : (
         emails.map((m) => (
           <details key={m.id} className="card p-4 text-sm">
             <summary className="flex cursor-pointer flex-wrap items-center gap-2">
-              <span className={`badge ${STATUS_BADGE[m.status] ?? 'bg-stone-100 text-stone-600'}`}>{m.status}</span>
+              <span className={`badge ${STATUS_BADGE[m.status] ?? 'badge-soft'}`}>{m.status}</span>
               <span className="font-medium">{m.subject}</span>
-              <span className="text-stone-400">→ {m.to}</span>
-              <span className="ml-auto text-xs text-stone-400">{formatDateTime(m.createdAt)}</span>
+              <span className="text-faint">→ {m.to}</span>
+              <span className="ml-auto text-xs text-faint">{formatDateTime(m.createdAt)}</span>
             </summary>
-            <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-stone-50 p-3 text-xs text-stone-700">{m.text}</pre>
-            {m.error && <p className="mt-2 text-xs text-red-600">Hiba: {m.error}</p>}
+            <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-soft p-3 text-xs text-ink/90">{m.text}</pre>
+            {m.error && <p className="mt-2 text-xs text-red-600 dark:text-red-400">Hiba: {m.error}</p>}
           </details>
         ))
       )}

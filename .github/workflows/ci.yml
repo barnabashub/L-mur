@@ -6,7 +6,7 @@ on:
 
 jobs:
   web:
-    name: Web (teszt + build)
+    name: Web (teszt + build + API füstteszt)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,14 @@ jobs:
         run: npm run db:seed
       - name: Production build
         run: npm run build
+      - name: API füstteszt élő szerver ellen
+        run: |
+          npx next start -p 3000 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000/api/health && break
+            sleep 1
+          done
+          bash e2e/api-test.sh
 
   mobile:
     name: Mobil (typecheck)
@@ -39,3 +47,11 @@ jobs:
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
       - run: npx tsc --noEmit
+
+  docker:
+    name: Docker image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Image build (a Dockerfile validálása)
+        run: docker build -t kettesben:ci .

@@ -13,8 +13,8 @@ export default async function RegisterPage({
   return (
     <div className="mx-auto max-w-md">
       <h1 className="mb-2 text-2xl font-bold">Regisztráció</h1>
-      <p className="mb-6 text-sm text-stone-600">
-        A regisztráció után a <Link href="/par" className="text-rose-600 hover:underline">Párom</Link>{' '}
+      <p className="mb-6 text-sm text-mute">
+        A regisztráció után a <Link href="/par" className="text-brand hover:underline">Párom</Link>{' '}
         oldalon tudjátok összekapcsolni a fiókjaitokat — de az app egyedül is teljes értékű.
       </p>
       <Flash hiba={sp.hiba} />
@@ -32,9 +32,9 @@ export default async function RegisterPage({
           <input className="input" type="password" id="password" name="password" required minLength={8} autoComplete="new-password" />
         </div>
         <button className="btn-primary w-full">Fiók létrehozása</button>
-        <p className="text-center text-sm text-stone-500">
+        <p className="text-center text-sm text-mute">
           Van már fiókod?{' '}
-          <Link href="/belepes" className="font-medium text-rose-600 hover:underline">Lépj be</Link>
+          <Link href="/belepes" className="font-medium text-brand hover:underline">Lépj be</Link>
         </p>
       </form>
     </div>

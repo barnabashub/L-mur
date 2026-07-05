@@ -5,6 +5,7 @@ import { isInSeason, pickOfTheDay } from '@/lib/discover';
 import { IdeaCard } from '@/components/IdeaCard';
 import { IdeaImage } from '@/components/IdeaImage';
 import { Flash } from '@/components/Flash';
+import { Logo } from '@/components/Logo';
 
 export default async function HomePage({
   searchParams,
@@ -26,33 +27,42 @@ export default async function HomePage({
     <div className="space-y-14">
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
 
-      <section className="rounded-3xl bg-gradient-to-br from-rose-600 to-rose-800 px-6 py-14 text-center text-rose-50 sm:px-12">
-        <h1 className="text-3xl font-bold sm:text-5xl">Randiötletek kettesben — egy életen át</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-rose-100">
-          Szép helyek, események és otthoni ötletek minden korosztályú párnak. Gyűjtsétek
-          bakancslistába, pipáljátok ki, és őrizzétek meg az emléket a közös randinaplótokban.
-          Nem csak az összejövést segítjük — az együtt maradást is.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/otletek" className="btn bg-white text-rose-700 hover:bg-rose-50">
-            Böngészem az ötleteket
-          </Link>
-          <Link href="/regisztracio" className="btn border border-rose-300 text-white hover:bg-rose-700">
-            Csatlakozunk
-          </Link>
+      <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-600 px-6 py-16 text-center text-white sm:px-12">
+        <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-fuchsia-400/30 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-violet-400/30 blur-3xl" />
+        <div className="relative">
+          <Logo className="mx-auto h-24 w-24 drop-shadow-lg" />
+          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+            Randizzatok úgy,{' '}
+            <span className="bg-gradient-to-r from-lime-300 to-amber-300 bg-clip-text text-transparent">
+              mintha most jöttetek volna össze
+            </span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-violet-100">
+            Szép helyek, események és otthoni ötletek minden korosztályú párnak. Bakancslista,
+            pipa, közös emlék — nem csak az összejövést segítjük, az együtt maradást is.
+          </p>
+          <div className="mt-9 flex flex-wrap justify-center gap-3">
+            <Link href="/otletek" className="btn bg-white px-6 py-3 text-base text-violet-700 shadow-xl hover:bg-violet-50">
+              Böngészem az ötleteket
+            </Link>
+            <Link href="/regisztracio" className="btn border-2 border-white/40 px-6 py-3 text-base text-white hover:bg-white/10">
+              Csatlakozunk 💜
+            </Link>
+          </div>
+          <dl className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-4 text-center">
+            {[
+              [ideaCount, 'randiötlet'],
+              [completionCount, 'kipipált randi'],
+              [coupleCount, 'összekapcsolt pár'],
+            ].map(([n, label]) => (
+              <div key={label as string} className="rounded-3xl bg-white/10 py-3 backdrop-blur">
+                <dd className="text-3xl font-black text-lime-300">{n as number}</dd>
+                <dt className="text-xs font-medium text-violet-100">{label as string}</dt>
+              </div>
+            ))}
+          </dl>
         </div>
-        <dl className="mx-auto mt-10 grid max-w-xl grid-cols-3 gap-4 text-center">
-          {[
-            [ideaCount, 'randiötlet'],
-            [completionCount, 'kipipált randi'],
-            [coupleCount, 'összekapcsolt pár'],
-          ].map(([n, label]) => (
-            <div key={label as string}>
-              <dd className="text-2xl font-bold">{n as number}</dd>
-              <dt className="text-xs text-rose-200">{label as string}</dt>
-            </div>
-          ))}
-        </dl>
       </section>
 
       {daily && (
@@ -61,10 +71,10 @@ export default async function HomePage({
           <Link href={`/otletek/${daily.id}`} className="card group grid overflow-hidden transition hover:shadow-md sm:grid-cols-[280px_1fr]">
             <IdeaImage imagePath={daily.imagePath} category={daily.category} title={daily.title} className="h-44 w-full sm:h-full" />
             <div className="space-y-2 p-6">
-              <span className="badge bg-rose-50 text-rose-700">{daily.category}</span>
-              <h3 className="text-2xl font-bold text-stone-900 group-hover:text-rose-700">{daily.title}</h3>
-              <p className="line-clamp-3 text-sm text-stone-600">{daily.description}</p>
-              <p className="text-sm font-medium text-rose-600">Megnézem →</p>
+              <span className="badge-brand">{daily.category}</span>
+              <h3 className="text-2xl font-bold text-ink group-hover:text-brand">{daily.title}</h3>
+              <p className="line-clamp-3 text-sm text-mute">{daily.description}</p>
+              <p className="text-sm font-medium text-brand">Megnézem →</p>
             </div>
           </Link>
         </section>
@@ -84,7 +94,7 @@ export default async function HomePage({
       <section>
         <div className="mb-4 flex items-end justify-between">
           <h2 className="text-xl font-bold">A legjobbra értékelt ötletek</h2>
-          <Link href="/otletek" className="text-sm font-medium text-rose-600 hover:underline">
+          <Link href="/otletek" className="text-sm font-medium text-brand hover:underline">
             Összes ötlet →
           </Link>
         </div>
@@ -104,7 +114,7 @@ export default async function HomePage({
           <div key={title} className="card p-6">
             <div className="text-3xl">{emoji}</div>
             <h3 className="mt-3 font-semibold">{title}</h3>
-            <p className="mt-1 text-sm text-stone-600">{text}</p>
+            <p className="mt-1 text-sm text-mute">{text}</p>
           </div>
         ))}
       </section>

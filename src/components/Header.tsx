@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { isModerator } from '@/lib/permissions';
 import { db } from '@/lib/db';
 import { logout } from '@/lib/actions/auth';
+import { Logo } from './Logo';
+import { ThemeToggle } from './ThemeToggle';
 
 export async function Header() {
   const user = await getCurrentUser();
@@ -11,44 +13,48 @@ export async function Header() {
     : 0;
 
   return (
-    <header className="sticky top-0 z-10 border-b border-stone-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-edge bg-card/80 backdrop-blur-lg">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3">
-        <Link href="/" className="text-lg font-bold tracking-tight text-rose-600">
-          💛 Kettesben
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-9 w-9" />
+          <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-lg font-extrabold tracking-tight text-transparent dark:from-violet-400 dark:to-fuchsia-400">
+            Kettesben
+          </span>
         </Link>
-        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-stone-600">
-          <Link href="/otletek" className="hover:text-rose-600">Ötletek</Link>
-          <Link href="/terkep" className="hover:text-rose-600">Térkép</Link>
-          <Link href="/bakancslistak" className="hover:text-rose-600">Bakancslisták</Link>
-          <Link href="/partnerek" className="hover:text-rose-600">Partnerek</Link>
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-semibold text-mute">
+          <Link href="/otletek" className="hover:text-brand">Ötletek</Link>
+          <Link href="/terkep" className="hover:text-brand">Térkép</Link>
+          <Link href="/bakancslistak" className="hover:text-brand">Bakancslisták</Link>
+          <Link href="/partnerek" className="hover:text-brand">Partnerek</Link>
           {user && (
             <>
-              <Link href="/naplo" className="hover:text-rose-600">Naplónk</Link>
-              <Link href="/datumok" className="hover:text-rose-600">Dátumaink</Link>
+              <Link href="/naplo" className="hover:text-brand">Naplónk</Link>
+              <Link href="/datumok" className="hover:text-brand">Dátumaink</Link>
               {user.role === 'PARTNER' && (
-                <Link href="/partner" className="font-semibold text-amber-700 hover:text-amber-800">
+                <Link href="/partner" className="text-amber-600 hover:text-amber-500 dark:text-amber-400">
                   Partnerfelület
                 </Link>
               )}
               {isModerator(user.role) && (
-                <Link href="/moderacio" className="font-semibold text-amber-700 hover:text-amber-800">
+                <Link href="/moderacio" className="text-amber-600 hover:text-amber-500 dark:text-amber-400">
                   Moderáció
                 </Link>
               )}
             </>
           )}
         </nav>
-        <div className="ml-auto flex items-center gap-2 text-sm">
+        <div className="ml-auto flex items-center gap-1 text-sm">
+          <ThemeToggle />
           {user ? (
             <>
               <Link
                 href="/ertesitesek"
-                className="relative rounded-lg p-2 text-stone-500 hover:bg-stone-100"
+                className="relative rounded-2xl p-2 text-mute hover:bg-soft"
                 title="Értesítések"
               >
                 🔔
                 {unread > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 px-1 text-[10px] font-bold text-white">
                     {unread}
                   </span>
                 )}

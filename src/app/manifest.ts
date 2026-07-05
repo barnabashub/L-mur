@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       'Páros randiötlet-gyűjtemény és randinapló: inspiráció, bakancslisták, közös emlékek és partnerkedvezmények.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#fafaf9',
-    theme_color: '#e11d48',
+    background_color: '#0e0c16',
+    theme_color: '#7c3aed',
     lang: 'hu',
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },

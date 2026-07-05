@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+mobile
+e2e
+tests
+*.db
+*.db-journal
+.env
+public/uploads/*
+!public/uploads/.gitkeep

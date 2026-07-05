@@ -35,30 +35,30 @@ export default async function NotificationsPage() {
       </div>
 
       {notifications.length === 0 ? (
-        <p className="card p-10 text-center text-stone-500">Nincs értesítésed.</p>
+        <p className="card p-10 text-center text-mute">Nincs értesítésed.</p>
       ) : (
         <ul className="space-y-2">
           {notifications.map((n) => (
             <li
               key={n.id}
-              className={`card flex gap-3 p-4 text-sm ${n.readAt ? 'opacity-70' : 'border-rose-200'}`}
+              className={`card flex gap-3 p-4 text-sm ${n.readAt ? 'opacity-70' : 'border-brand/40'}`}
             >
               <span className="text-lg">{TYPE_EMOJI[n.type] ?? '🔔'}</span>
               <div>
-                <p className="text-stone-800">{n.message}</p>
-                <p className="mt-1 text-xs text-stone-400">
+                <p className="text-ink">{n.message}</p>
+                <p className="mt-1 text-xs text-faint">
                   {formatDateTime(n.createdAt)}
                   {n.link && (
                     <>
                       {' · '}
-                      <Link href={n.link} className="font-medium text-rose-600 hover:underline">
+                      <Link href={n.link} className="font-medium text-brand hover:underline">
                         Megnézem →
                       </Link>
                     </>
                   )}
                 </p>
               </div>
-              {!n.readAt && <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-rose-500" />}
+              {!n.readAt && <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-brand" />}
             </li>
           ))}
         </ul>

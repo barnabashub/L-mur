@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { ScrollView, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../lib/auth-context';
-import { colors, spacing } from '../lib/theme';
+import { spacing, useTheme } from '../lib/theme'
 import { Button, Card, ErrorText, Input, Label } from '../components/ui';
 
 export default function LoginScreen() {
+  const t = useTheme();
   const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -36,7 +37,7 @@ export default function LoginScreen() {
         <ErrorText text={error} />
         <Button title="Belépés" onPress={submit} loading={busy} disabled={!email || !password} />
         <Button title="Még nincs fiókom — regisztráció" variant="ghost" onPress={() => router.replace('/register')} />
-        <Text style={{ fontSize: 12, color: colors.faint, textAlign: 'center' }}>
+        <Text style={{ fontSize: 12, color: t.faint, textAlign: 'center' }}>
           Elfelejtett jelszó? A webes felületen tudod visszaállítani.
         </Text>
       </Card>

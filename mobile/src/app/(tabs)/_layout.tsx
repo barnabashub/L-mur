@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { Tabs } from 'expo-router';
-import { colors } from '../../lib/theme';
+import { useTheme } from '../../lib/theme'
 
 function icon(emoji: string) {
   return ({ focused }: { focused: boolean }) => (
@@ -10,14 +10,17 @@ function icon(emoji: string) {
 }
 
 export default function TabsLayout() {
+  const t = useTheme();
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.muted,
-        headerTitleStyle: { color: colors.text },
+        tabBarActiveTintColor: t.primary,
+        tabBarInactiveTintColor: t.muted,
+        headerTitleStyle: { color: t.text },
+        headerStyle: { backgroundColor: t.card },
+        tabBarStyle: { backgroundColor: t.card, borderTopColor: t.border },
         headerShadowVisible: false,
-        sceneStyle: { backgroundColor: colors.bg },
+        sceneStyle: { backgroundColor: t.bg },
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Ötletek', headerTitle: '💛 Kettesben', tabBarIcon: icon('💡') }} />

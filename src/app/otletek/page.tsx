@@ -35,7 +35,7 @@ export default async function IdeasPage({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Randiötletek</h1>
-          <p className="text-sm text-stone-500">{ideas.length} ötlet a szűrők szerint</p>
+          <p className="text-sm text-mute">{ideas.length} ötlet a szűrők szerint</p>
         </div>
         <Link href="/otletek/uj" className="btn-primary">+ Új ötletet küldök be</Link>
       </div>
@@ -43,9 +43,9 @@ export default async function IdeasPage({
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
 
       {sp.cimke && (
-        <p className="mb-4 text-sm text-stone-600">
-          Szűrés címkére: <span className="badge bg-stone-100 text-stone-700">#{sp.cimke}</span>{' '}
-          <Link href="/otletek" className="text-rose-600 hover:underline">× szűrő törlése</Link>
+        <p className="mb-4 text-sm text-mute">
+          Szűrés címkére: <span className="badge-soft">#{sp.cimke}</span>{' '}
+          <Link href="/otletek" className="text-brand hover:underline">× szűrő törlése</Link>
         </p>
       )}
 
@@ -77,9 +77,9 @@ export default async function IdeasPage({
       </form>
 
       {ideas.length === 0 ? (
-        <p className="card p-10 text-center text-stone-500">
+        <p className="card p-10 text-center text-mute">
           Nincs a szűrőknek megfelelő ötlet.{' '}
-          <Link href="/otletek" className="text-rose-600 hover:underline">Szűrők törlése</Link>
+          <Link href="/otletek" className="text-brand hover:underline">Szűrők törlése</Link>
         </p>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

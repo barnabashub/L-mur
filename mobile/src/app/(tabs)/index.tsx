@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { api, type IdeaSummary } from '../../lib/api';
-import { colors, spacing } from '../../lib/theme';
+import { spacing, useTheme } from '../../lib/theme'
 import { IdeaCard } from '../../components/IdeaCard';
 import { Empty, ErrorText, Input } from '../../components/ui';
 
 const CATEGORIES = ['Természet', 'Kultúra', 'Gasztronómia', 'Aktív / sport', 'Romantikus', 'Otthoni', 'Esemény', 'Kaland'];
 
 export default function IdeasScreen() {
+  const t = useTheme();
   const [ideas, setIdeas] = useState<IdeaSummary[]>([]);
   const [q, setQ] = useState('');
   const [category, setCategory] = useState<string | null>(null);
@@ -36,7 +37,7 @@ export default function IdeasScreen() {
       keyExtractor={(i) => i.id}
       renderItem={({ item }) => <IdeaCard idea={item} />}
       contentContainerStyle={{ padding: spacing.l }}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={t.primary} />}
       ListHeaderComponent={
         <View style={{ gap: spacing.m, marginBottom: spacing.m }}>
           <Input
@@ -57,12 +58,12 @@ export default function IdeasScreen() {
                     paddingHorizontal: 12,
                     paddingVertical: 6,
                     borderRadius: 999,
-                    backgroundColor: active ? colors.primary : colors.card,
+                    backgroundColor: active ? t.primary : t.card,
                     borderWidth: 1,
-                    borderColor: active ? colors.primary : colors.border,
+                    borderColor: active ? t.primary : t.border,
                   }}
                 >
-                  <Text style={{ color: active ? '#fff' : colors.muted, fontSize: 13, fontWeight: '600' }}>{c}</Text>
+                  <Text style={{ color: active ? '#fff' : t.muted, fontSize: 13, fontWeight: '600' }}>{c}</Text>
                 </Pressable>
               );
             })}

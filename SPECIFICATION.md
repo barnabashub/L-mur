@@ -185,14 +185,24 @@ kampányai szervezési (nem fejlesztési) feladat.
   azonosítók beállítva (`hu.kettesben.app`), kiadás EAS Builddel.
 - **PWA**: a webapp telepíthető kezdőképernyőre (manifest + ikonok, standalone mód).
 
-**Fázis 5 — üzemeltetés:** ✅ **részben megvalósítva** —
-- CI (GitHub Actions): egységtesztek + web build + mobil typecheck minden pushnál,
-- rate limiting a belépés/regisztráció/jelszóreset útvonalakon (web + API; folyamaton
-  belüli fix ablak, prodban Redis-re cserélhető),
-- GDPR: teljes adatexport (`/api/export`, JSON letöltés) és fióktörlés (jelszavas +
-  szöveges megerősítéssel; a közösségi ötletek anonimizálva maradnak).
-Hátralévő üzemeltetési elemek (infrastruktúra-függők): PostgreSQL + S3 átállás (a séma
-és a feltöltés-modul előkészítve), monitoring, CDN, web push az évfordulókhoz.
+**Fázis 5 — üzemeltetés:** ✅ **megvalósítva** —
+- CI (GitHub Actions): egységtesztek + web build + élő API füstteszt + mobil typecheck +
+  Docker image build minden pushnál,
+- konténerizáció: többlépcsős Dockerfile + docker-compose (adat-kötetek, healthcheck,
+  beépített napi cron az évforduló-emlékeztetőkhöz),
+- monitoring: `/api/health` életjel-végpont (DB-ellenőrzéssel), `/api/metrics`
+  Prometheus-formátumú üzleti és folyamat-metrikák (tokennel védhető),
+- rate limiting a belépés/regisztráció/jelszóreset útvonalakon (web + API),
+- GDPR: teljes adatexport (`/api/export`) és fióktörlés,
+- **üzemeltetői kézikönyv** (`OPERATIONS.md`): telepítés, env-referencia, riasztási
+  javaslatok, mentés/visszaállítás, skálázási útmutató, verziófrissítés, incidens-runbook.
+Infrastruktúra-függő továbblépések dokumentálva: PostgreSQL + S3 + Redis átállás
+(mindhárom modul cserére előkészítve), CDN, web push.
+
+**Arculat (v2):** merész lila–fukszia paletta lime kiemelésekkel (a korábbi piros
+lecserélve), token-alapú design-rendszer, teljes dark mode (weben váltógomb +
+rendszerkövetés, mobilon rendszerkövetés), új logó: két gyűrűsfarkú lemur farka,
+amelyek pontatlan szívet formálnak — ez adja az app kabalaállatát is.
 
 ## 8. Nyitott kérdések — döntésekkel
 

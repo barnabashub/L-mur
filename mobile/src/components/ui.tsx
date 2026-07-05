@@ -8,7 +8,7 @@ import {
   View,
   type TextInputProps,
 } from 'react-native';
-import { colors, radius, spacing } from '../lib/theme';
+import { radius, spacing, useTheme } from '../lib/theme';
 
 export function Button({
   title,
@@ -23,45 +23,83 @@ export function Button({
   disabled?: boolean;
   loading?: boolean;
 }) {
-  const v = styles[`btn_${variant}`];
-  const t = styles[`btnText_${variant}`];
+  const t = useTheme();
+  const bg = {
+    primary: t.primary,
+    secondary: t.roseBg,
+    ghost: 'transparent',
+    danger: 'rgba(239, 68, 68, 0.12)',
+  }[variant];
+  const fg = {
+    primary: t.onPrimary,
+    secondary: t.primaryDark,
+    ghost: t.muted,
+    danger: '#ef4444',
+  }[variant];
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [styles.btn, v, (disabled || loading) && { opacity: 0.5 }, pressed && { opacity: 0.8 }]}
+      style={({ pressed }) => [
+        styles.btn,
+        { backgroundColor: bg },
+        (disabled || loading) && { opacity: 0.5 },
+        pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+      ]}
     >
-      {loading ? <ActivityIndicator color={variant === 'primary' ? '#fff' : colors.primary} /> : <Text style={[styles.btnText, t]}>{title}</Text>}
+      {loading ? (
+        <ActivityIndicator color={fg} />
+      ) : (
+        <Text style={[styles.btnText, { color: fg }]}>{title}</Text>
+      )}
     </Pressable>
   );
 }
 
 export function Input(props: TextInputProps) {
-  return <TextInput placeholderTextColor={colors.faint} {...props} style={[styles.input, props.style]} />;
+  const t = useTheme();
+  return (
+    <TextInput
+      placeholderTextColor={t.faint}
+      {...props}
+      style={[
+        styles.input,
+        { borderColor: t.border, backgroundColor: t.card, color: t.text },
+        props.style,
+      ]}
+    />
+  );
 }
 
 export function Card({ children, style }: { children: React.ReactNode; style?: object }) {
-  return <View style={[styles.card, style]}>{children}</View>;
+  const t = useTheme();
+  return (
+    <View style={[styles.card, { backgroundColor: t.card, borderColor: t.border }, style]}>
+      {children}
+    </View>
+  );
 }
 
 export function Badge({ text, tone = 'rose' }: { text: string; tone?: 'rose' | 'amber' | 'green' | 'muted' }) {
-  const bg = { rose: colors.roseBg, amber: colors.amberBg, green: colors.greenBg, muted: '#f5f5f4' }[tone];
-  const fg = { rose: colors.primaryDark, amber: colors.amber, green: colors.green, muted: colors.muted }[tone];
+  const t = useTheme();
+  const bg = { rose: t.roseBg, amber: t.amberBg, green: t.greenBg, muted: t.bg }[tone];
+  const fg = { rose: t.primaryDark, amber: t.amber, green: t.green, muted: t.muted }[tone];
   return (
     <View style={[styles.badge, { backgroundColor: bg }]}>
-      <Text style={{ color: fg, fontSize: 11, fontWeight: '600' }}>{text}</Text>
+      <Text style={{ color: fg, fontSize: 11, fontWeight: '700' }}>{text}</Text>
     </View>
   );
 }
 
 export function Stars({ value, count, size = 14 }: { value: number | null; count?: number; size?: number }) {
-  if (value === null) return <Text style={{ color: colors.faint, fontSize: size - 2 }}>Még nincs értékelés</Text>;
+  const t = useTheme();
+  if (value === null) return <Text style={{ color: t.faint, fontSize: size - 2 }}>Még nincs értékelés</Text>;
   const rounded = Math.round(value);
   return (
     <Text style={{ fontSize: size }}>
-      <Text style={{ color: colors.star }}>{'★'.repeat(rounded)}</Text>
-      <Text style={{ color: colors.border }}>{'★'.repeat(5 - rounded)}</Text>
-      <Text style={{ color: colors.muted, fontSize: size - 2 }}>
+      <Text style={{ color: t.star }}>{'★'.repeat(rounded)}</Text>
+      <Text style={{ color: t.border }}>{'★'.repeat(5 - rounded)}</Text>
+      <Text style={{ color: t.muted, fontSize: size - 2 }}>
         {' '}{value.toFixed(1)}{count !== undefined ? ` (${count})` : ''}
       </Text>
     </Text>
@@ -70,11 +108,12 @@ export function Stars({ value, count, size = 14 }: { value: number | null; count
 
 /** Érintéssel választható csillagsor űrlapokhoz. */
 export function StarPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
+  const t = useTheme();
   return (
     <View style={{ flexDirection: 'row', gap: spacing.s }}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Pressable key={n} onPress={() => onChange(n)} hitSlop={6}>
-          <Text style={{ fontSize: 30, color: n <= value ? colors.star : colors.border }}>★</Text>
+          <Text style={{ fontSize: 30, color: n <= value ? t.star : t.border }}>★</Text>
         </Pressable>
       ))}
     </View>
@@ -82,22 +121,24 @@ export function StarPicker({ value, onChange }: { value: number; onChange: (n: n
 }
 
 export function Empty({ text }: { text: string }) {
+  const t = useTheme();
   return (
     <Card style={{ padding: spacing.xl, alignItems: 'center' }}>
-      <Text style={{ color: colors.muted, textAlign: 'center' }}>{text}</Text>
+      <Text style={{ color: t.muted, textAlign: 'center' }}>{text}</Text>
     </Card>
   );
 }
 
 export function Label({ text }: { text: string }) {
-  return <Text style={styles.label}>{text}</Text>;
+  const t = useTheme();
+  return <Text style={[styles.label, { color: t.text }]}>{text}</Text>;
 }
 
 export function ErrorText({ text }: { text: string | null }) {
   if (!text) return null;
   return (
     <View style={styles.errorBox}>
-      <Text style={{ color: '#991b1b', fontSize: 13 }}>{text}</Text>
+      <Text style={{ color: '#f87171', fontSize: 13 }}>{text}</Text>
     </View>
   );
 }
@@ -105,35 +146,22 @@ export function ErrorText({ text }: { text: string | null }) {
 const styles = StyleSheet.create({
   btn: {
     borderRadius: radius.m,
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: spacing.l,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btn_primary: { backgroundColor: colors.primary },
-  btn_secondary: { backgroundColor: colors.roseBg, borderWidth: 1, borderColor: '#fecdd3' },
-  btn_ghost: { backgroundColor: 'transparent' },
-  btn_danger: { backgroundColor: '#fef2f2', borderWidth: 1, borderColor: '#fecaca' },
-  btnText: { fontWeight: '700', fontSize: 15 },
-  btnText_primary: { color: '#fff' },
-  btnText_secondary: { color: colors.primaryDark },
-  btnText_ghost: { color: colors.muted },
-  btnText_danger: { color: '#b91c1c' },
+  btnText: { fontWeight: '800', fontSize: 15 },
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.card,
     borderRadius: radius.m,
     paddingHorizontal: spacing.m,
     paddingVertical: 10,
     fontSize: 15,
-    color: colors.text,
   },
   card: {
-    backgroundColor: colors.card,
     borderRadius: radius.l,
     borderWidth: 1,
-    borderColor: colors.border,
     padding: spacing.l,
   },
   badge: {
@@ -142,10 +170,10 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     alignSelf: 'flex-start',
   },
-  label: { fontSize: 13, fontWeight: '600', color: colors.text, marginBottom: 4, marginTop: spacing.m },
+  label: { fontSize: 13, fontWeight: '700', marginBottom: 4, marginTop: spacing.m },
   errorBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
+    backgroundColor: 'rgba(239, 68, 68, 0.10)',
+    borderColor: 'rgba(239, 68, 68, 0.35)',
     borderWidth: 1,
     borderRadius: radius.m,
     padding: spacing.m,

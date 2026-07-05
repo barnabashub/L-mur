@@ -8,10 +8,10 @@ export async function VerifyBanner() {
 
   return (
     <div className="border-b border-amber-200 bg-amber-50">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-sm text-amber-900">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-sm text-amber-900 dark:text-amber-200">
         ✉️ Erősítsd meg az e-mail címedet — elküldtük a linket a(z) <strong>{user.email}</strong> címre.
         <form action={resendVerification}>
-          <button className="font-semibold underline hover:text-amber-700">Újraküldés</button>
+          <button className="font-semibold underline hover:text-amber-700 dark:text-amber-300">Újraküldés</button>
         </form>
       </div>
     </div>

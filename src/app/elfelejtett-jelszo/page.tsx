@@ -13,7 +13,7 @@ export default async function ForgotPasswordPage({
   return (
     <div className="mx-auto max-w-md">
       <h1 className="mb-2 text-2xl font-bold">Elfelejtett jelszó</h1>
-      <p className="mb-6 text-sm text-stone-600">
+      <p className="mb-6 text-sm text-mute">
         Add meg az e-mail címedet, és küldünk egy visszaállító linket (1 óráig érvényes).
       </p>
       <Flash hiba={sp.hiba} />
@@ -23,8 +23,8 @@ export default async function ForgotPasswordPage({
           <input className="input" type="email" id="email" name="email" required autoComplete="email" />
         </div>
         <button className="btn-primary w-full">Visszaállító link küldése</button>
-        <p className="text-center text-sm text-stone-500">
-          <Link href="/belepes" className="font-medium text-rose-600 hover:underline">← Vissza a belépéshez</Link>
+        <p className="text-center text-sm text-mute">
+          <Link href="/belepes" className="font-medium text-brand hover:underline">← Vissza a belépéshez</Link>
         </p>
       </form>
     </div>

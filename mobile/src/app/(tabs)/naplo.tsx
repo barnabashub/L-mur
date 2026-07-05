@@ -3,7 +3,7 @@ import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
 import { Link, useFocusEffect } from 'expo-router';
 import { api, imageUrl, type JournalEntry } from '../../lib/api';
 import { useAuth } from '../../lib/auth-context';
-import { colors, spacing } from '../../lib/theme';
+import { spacing, useTheme } from '../../lib/theme'
 import { Button, Card, Empty, ErrorText, Input, Label } from '../../components/ui';
 
 function formatDate(d: string) {
@@ -11,6 +11,7 @@ function formatDate(d: string) {
 }
 
 export default function JournalScreen() {
+  const t = useTheme();
   const { token } = useAuth();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -68,13 +69,13 @@ export default function JournalScreen() {
       data={entries}
       keyExtractor={(e) => `${e.kind}-${e.id}`}
       contentContainerStyle={{ padding: spacing.l }}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={t.primary} />}
       ListHeaderComponent={
         <View style={{ marginBottom: spacing.m, gap: spacing.m }}>
           <ErrorText text={error} />
           {showForm ? (
             <Card style={{ gap: spacing.s }}>
-              <Text style={{ fontWeight: '700', color: colors.text }}>Appon kívüli randi megörökítése</Text>
+              <Text style={{ fontWeight: '700', color: t.text }}>Appon kívüli randi megörökítése</Text>
               <Label text="Mi volt a randi?" />
               <Input value={title} onChangeText={setTitle} placeholder="pl. Piknik a hegyen" />
               <Label text="Hogy emlékeztek rá?" />
@@ -93,21 +94,21 @@ export default function JournalScreen() {
           <Card style={{ marginBottom: spacing.m, padding: 0, overflow: 'hidden' }}>
             {img && <Image source={{ uri: img }} style={{ width: '100%', height: 180 }} />}
             <View style={{ padding: spacing.l, gap: 6 }}>
-              <Text style={{ fontSize: 11, fontWeight: '700', color: colors.primary, textTransform: 'uppercase' }}>
+              <Text style={{ fontSize: 11, fontWeight: '700', color: t.primary, textTransform: 'uppercase' }}>
                 {formatDate(item.date)} · {item.byName}
                 {item.kind === 'memory' ? ' · appon kívüli emlék' : ''}
               </Text>
               {item.kind === 'completion' && item.ideaId ? (
                 <Link href={{ pathname: '/otlet/[id]', params: { id: item.ideaId } }}>
-                  <Text style={{ fontWeight: '700', fontSize: 15, color: colors.text }}>{item.title}</Text>
+                  <Text style={{ fontWeight: '700', fontSize: 15, color: t.text }}>{item.title}</Text>
                 </Link>
               ) : (
-                <Text style={{ fontWeight: '700', fontSize: 15, color: colors.text }}>{item.title}</Text>
+                <Text style={{ fontWeight: '700', fontSize: 15, color: t.text }}>{item.title}</Text>
               )}
-              {!!item.publicText && <Text style={{ fontSize: 14, color: colors.text }}>{item.publicText}</Text>}
+              {!!item.publicText && <Text style={{ fontSize: 14, color: t.text }}>{item.publicText}</Text>}
               {!!item.privateText && (
-                <View style={{ backgroundColor: colors.roseBg, borderRadius: 10, padding: spacing.m }}>
-                  <Text style={{ fontSize: 14, color: colors.text }}>🔒 {item.privateText}</Text>
+                <View style={{ backgroundColor: t.roseBg, borderRadius: 10, padding: spacing.m }}>
+                  <Text style={{ fontSize: 14, color: t.text }}>🔒 {item.privateText}</Text>
                 </View>
               )}
             </View>

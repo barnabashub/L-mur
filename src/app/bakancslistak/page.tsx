@@ -39,18 +39,18 @@ export default async function ListsPage({
     return (
       <Link key={list.id} href={`/bakancslistak/${list.id}`} className="card group block p-5 transition hover:shadow-md">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-semibold text-stone-900 group-hover:text-rose-700">
+          <h3 className="font-semibold text-ink group-hover:text-brand">
             {list.isSystem && '⭐ '}{list.title}
           </h3>
-          <span className="badge bg-stone-100 text-stone-600">{total} ötlet</span>
+          <span className="badge-soft">{total} ötlet</span>
         </div>
-        {list.description && <p className="mt-1 text-sm text-stone-500">{list.description}</p>}
+        {list.description && <p className="mt-1 text-sm text-mute">{list.description}</p>}
         {user && total > 0 && (
           <div className="mt-3">
-            <div className="h-2 overflow-hidden rounded-full bg-stone-100">
-              <div className="h-full rounded-full bg-rose-500" style={{ width: `${pct}%` }} />
+            <div className="h-2 overflow-hidden rounded-full bg-soft">
+              <div className="h-full rounded-full bg-brand" style={{ width: `${pct}%` }} />
             </div>
-            <p className="mt-1 text-xs text-stone-500">{done}/{total} teljesítve ({pct}%)</p>
+            <p className="mt-1 text-xs text-mute">{done}/{total} teljesítve ({pct}%)</p>
           </div>
         )}
       </Link>
@@ -64,7 +64,7 @@ export default async function ListsPage({
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-bold">Bakancslisták</h1>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-mute">
           Válogatott gyűjtemények tőlünk, és a saját közös terveitek egy helyen.
         </p>
       </div>
@@ -82,7 +82,7 @@ export default async function ListsPage({
             {ownLists.length > 0 ? (
               <div className="mb-6 grid gap-4 sm:grid-cols-2">{ownLists.map(renderCard)}</div>
             ) : (
-              <p className="mb-6 text-sm text-stone-500">Még nincs saját listátok — hozzatok létre egyet!</p>
+              <p className="mb-6 text-sm text-mute">Még nincs saját listátok — hozzatok létre egyet!</p>
             )}
             <form action={createList} className="card grid gap-3 p-5 sm:grid-cols-[1fr_1fr_auto]">
               <input className="input" name="title" required minLength={3} maxLength={120}
@@ -92,9 +92,9 @@ export default async function ListsPage({
             </form>
           </>
         ) : (
-          <p className="card p-6 text-sm text-stone-500">
-            Saját bakancslistához <Link href="/belepes" className="font-medium text-rose-600 hover:underline">lépj be</Link>{' '}
-            vagy <Link href="/regisztracio" className="font-medium text-rose-600 hover:underline">regisztrálj</Link>.
+          <p className="card p-6 text-sm text-mute">
+            Saját bakancslistához <Link href="/belepes" className="font-medium text-brand hover:underline">lépj be</Link>{' '}
+            vagy <Link href="/regisztracio" className="font-medium text-brand hover:underline">regisztrálj</Link>.
           </p>
         )}
       </section>

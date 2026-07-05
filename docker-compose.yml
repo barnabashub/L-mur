@@ -1,0 +1,53 @@
+# Kettesben — üzemeltetési összeállítás.
+# Indítás:  docker compose up -d --build
+# Első indításhoz demó-adatokkal:  SEED_DEMO=1 docker compose up -d --build
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: 'file:/data/kettesben.db'
+      SESSION_SECRET: '${SESSION_SECRET:?Állítsd be a SESSION_SECRET-et (.env)}'
+      APP_URL: '${APP_URL:-http://localhost:3000}'
+      CRON_SECRET: '${CRON_SECRET:?Állítsd be a CRON_SECRET-et (.env)}'
+      METRICS_TOKEN: '${METRICS_TOKEN:-}'
+      SMTP_HOST: '${SMTP_HOST:-}'
+      SMTP_PORT: '${SMTP_PORT:-587}'
+      SMTP_USER: '${SMTP_USER:-}'
+      SMTP_PASS: '${SMTP_PASS:-}'
+      SMTP_FROM: '${SMTP_FROM:-Kettesben <no-reply@kettesben.hu>}'
+      SEED_DEMO: '${SEED_DEMO:-0}'
+    volumes:
+      - ./data:/data
+      - ./data/uploads:/app/public/uploads
+    restart: unless-stopped
+
+  # Évforduló-emlékeztetők napi kiküldése (embedded cron).
+  cron:
+    image: alpine:3.20
+    command: >
+      sh -c "apk add --no-cache curl >/dev/null &&
+      echo '0 7 * * * curl -sf -H \"Authorization: Bearer $${CRON_SECRET}\" http://app:3000/api/cron/emlekeztetok' > /etc/crontabs/root &&
+      crond -f -l 8"
+    environment:
+      CRON_SECRET: '${CRON_SECRET:?}'
+    depends_on:
+      - app
+    restart: unless-stopped
+
+# PostgreSQL-re váltáshoz (ajánlott nagyobb terhelésnél):
+#   1. prisma/schema.prisma: provider = "postgresql"
+#   2. DATABASE_URL: postgresql://kettesben:titok@db:5432/kettesben
+#   3. Komment ki:
+#  db:
+#    image: postgres:16-alpine
+#    environment:
+#      POSTGRES_USER: kettesben
+#      POSTGRES_PASSWORD: titok
+#      POSTGRES_DB: kettesben
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    restart: unless-stopped
+# volumes:
+#   pgdata:

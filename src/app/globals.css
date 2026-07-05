@@ -3,37 +3,97 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg: 247 246 252;
+    --card: 255 255 255;
+    --soft: 240 238 249;
+    --edge: 230 227 243;
+    --ink: 30 27 44;
+    --mute: 108 104 132;
+    --faint: 158 154 182;
+    --brand: 124 58 237; /* violet-600 */
+    --brand-strong: 109 40 217; /* violet-700 */
+    --brand-soft: 237 233 254; /* violet-100 */
+  }
+
+  .dark {
+    --bg: 14 12 22;
+    --card: 25 22 38;
+    --soft: 37 33 56;
+    --edge: 48 43 72;
+    --ink: 240 238 250;
+    --mute: 168 163 194;
+    --faint: 122 117 150;
+    --brand: 167 139 250; /* violet-400 */
+    --brand-strong: 139 92 246; /* violet-500 */
+    --brand-soft: 55 38 102;
+  }
+
   body {
-    @apply bg-stone-50 text-stone-800 antialiased;
+    @apply bg-page text-ink antialiased;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-bold transition active:scale-95 disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-rose-600 text-white hover:bg-rose-700;
+    @apply btn bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 hover:brightness-110;
   }
   .btn-secondary {
-    @apply btn border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100;
+    @apply btn bg-brand-soft text-brand-strong hover:brightness-95 dark:text-violet-200 dark:hover:brightness-125;
   }
   .btn-ghost {
-    @apply btn text-stone-600 hover:bg-stone-100;
+    @apply btn text-mute hover:bg-soft;
   }
   .btn-danger {
-    @apply btn border border-red-200 bg-red-50 text-red-700 hover:bg-red-100;
+    @apply btn border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20;
   }
   .input {
-    @apply w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500;
+    @apply w-full rounded-2xl border border-edge bg-card px-3.5 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30;
   }
   .label {
-    @apply mb-1 block text-sm font-medium text-stone-700;
+    @apply mb-1 block text-sm font-semibold text-ink;
   }
   .card {
-    @apply rounded-2xl border border-stone-200 bg-white shadow-sm;
+    @apply rounded-blob border border-edge bg-card shadow-sm shadow-violet-950/5;
   }
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .badge-brand {
+    @apply badge bg-brand-soft text-brand-strong dark:text-violet-200;
+  }
+  .badge-soft {
+    @apply badge bg-soft text-mute;
+  }
+  .badge-amber {
+    @apply badge bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300;
+  }
+  .badge-green {
+    @apply badge bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300;
+  }
+  .badge-sky {
+    @apply badge bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300;
+  }
+  .badge-red {
+    @apply badge bg-red-100 text-red-800 dark:bg-red-400/15 dark:text-red-300;
+  }
+  .badge-lime {
+    @apply badge bg-lime-200 text-lime-900 dark:bg-lime-400/20 dark:text-lime-300;
+  }
+  /* Kiemelt panelek (kedvezmény, közelgő forduló) */
+  .panel-amber {
+    @apply card border-amber-200 bg-amber-50/70 dark:border-amber-400/25 dark:bg-amber-400/10;
+  }
+  .panel-brand {
+    @apply card border-violet-200 bg-violet-50/70 dark:border-violet-400/25 dark:bg-violet-400/10;
+  }
+  .flash-ok {
+    @apply rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-400/25 dark:bg-emerald-400/10 dark:text-emerald-300;
+  }
+  .flash-err {
+    @apply rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-300;
   }
 }

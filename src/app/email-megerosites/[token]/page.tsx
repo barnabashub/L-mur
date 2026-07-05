@@ -25,7 +25,7 @@ export default async function VerifyEmailPage({
           <h1 className="mt-4 text-2xl font-bold">
             {alreadyVerified ? 'Ez a cím már meg volt erősítve' : 'E-mail cím megerősítve!'}
           </h1>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="mt-2 text-sm text-mute">
             Köszönjük, {row.user.name} — minden készen áll a közös kalandokhoz.
           </p>
           <Link href="/otletek" className="btn-primary mt-6">Irány az ötletgyűjtemény →</Link>
@@ -34,7 +34,7 @@ export default async function VerifyEmailPage({
         <div className="card p-10">
           <div className="text-5xl">⌛</div>
           <h1 className="mt-4 text-2xl font-bold">A link érvénytelen vagy lejárt</h1>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="mt-2 text-sm text-mute">
             A megerősítő linkek 24 óráig érvényesek. A profilodon kérhetsz újat.
           </p>
           <Link href="/profil" className="btn-secondary mt-6">Profilom →</Link>

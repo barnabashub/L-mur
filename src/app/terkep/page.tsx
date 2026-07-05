@@ -44,9 +44,9 @@ export default async function MapPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Randitérkép 🗺️</h1>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-mute">
           Helyhez kötött ötleteink az országban — kattints egy pontra! A helyfüggetlen ötleteket az{' '}
-          <Link href="/otletek?hely=helyfuggetlen" className="text-rose-600 hover:underline">
+          <Link href="/otletek?hely=helyfuggetlen" className="text-brand hover:underline">
             ötletböngészőben
           </Link>{' '}
           találod.
@@ -55,21 +55,21 @@ export default async function MapPage() {
 
       <div className="card overflow-x-auto p-4">
         <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto w-full max-w-3xl" role="img" aria-label="Magyarország-térkép a randiötletekkel">
-          <polygon points={outlinePoints} fill="#fff1f2" stroke="#fda4af" strokeWidth="2" strokeLinejoin="round" />
+          <polygon points={outlinePoints} className="fill-brand-soft/70 stroke-violet-300 dark:stroke-violet-500/60" strokeWidth="2" strokeLinejoin="round" />
           {ideas.map((idea) => {
             const p = project(idea.lat!, idea.lng!);
             return (
               <Link key={idea.id} href={`/otletek/${idea.id}`}>
                 <g className="cursor-pointer">
-                  <circle cx={p.x} cy={p.y} r="10" fill="#e11d48" opacity="0.25" />
-                  <circle cx={p.x} cy={p.y} r="5" fill="#e11d48" />
+                  <circle cx={p.x} cy={p.y} r="10" className="fill-fuchsia-500" opacity="0.25" />
+                  <circle cx={p.x} cy={p.y} r="5" className="fill-fuchsia-500" />
                   <title>{idea.title} — {idea.locationName}</title>
                 </g>
               </Link>
             );
           })}
         </svg>
-        <p className="mt-2 text-center text-xs text-stone-400">
+        <p className="mt-2 text-center text-xs text-faint">
           Stilizált térkép — a pontok elhelyezkedése hozzávetőleges.
         </p>
       </div>
@@ -79,8 +79,8 @@ export default async function MapPage() {
           <Link key={idea.id} href={`/otletek/${idea.id}`} className="card flex items-center gap-3 p-4 transition hover:shadow-md">
             <span className="text-xl">📍</span>
             <div className="min-w-0">
-              <p className="truncate font-semibold text-stone-900">{idea.title}</p>
-              <p className="truncate text-xs text-stone-500">{idea.locationName}</p>
+              <p className="truncate font-semibold text-ink">{idea.title}</p>
+              <p className="truncate text-xs text-mute">{idea.locationName}</p>
             </div>
             <span className="ml-auto shrink-0">
               <Stars value={avgStars(idea.reviews)} />

@@ -25,23 +25,23 @@ export default async function DatesPage({
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Fontos dátumaink 📅</h1>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-mute">
           Mentsétek el a nagy napokat — az év- és hónapfordulókra emlékeztetünk.
         </p>
       </div>
       <Flash hiba={sp.hiba} uzenet={sp.uzenet} />
 
       {upcoming.length > 0 && (
-        <section className="card border-rose-200 bg-rose-50/60 p-6">
-          <h2 className="font-bold text-rose-900">Közelgő fordulók 🎉</h2>
+        <section className="panel-brand p-6">
+          <h2 className="font-bold text-brand-strong dark:text-violet-200">Közelgő fordulók 🎉</h2>
           <ul className="mt-3 space-y-2">
             {upcoming.map((a) => (
-              <li key={`${a.id}-${a.kind}-${a.date.toISOString()}`} className="flex flex-wrap items-baseline gap-x-2 text-sm text-rose-900">
+              <li key={`${a.id}-${a.kind}-${a.date.toISOString()}`} className="flex flex-wrap items-baseline gap-x-2 text-sm text-ink">
                 <strong>{a.title}</strong>
                 <span>
                   — {a.count}. {a.kind === 'yearly' ? 'évforduló' : 'hónapforduló'}: {formatDate(a.date)}
                 </span>
-                <span className="badge bg-white text-rose-700">
+                <span className="badge bg-card text-brand">
                   {a.daysAway === 0 ? 'MA VAN! 🥂' : `${a.daysAway} nap múlva`}
                 </span>
               </li>
@@ -58,13 +58,13 @@ export default async function DatesPage({
               placeholder="pl. Megismerkedésünk napja" />
             <input className="input" type="date" name="date" required />
           </div>
-          <div className="flex flex-wrap gap-6 text-sm text-stone-700">
+          <div className="flex flex-wrap gap-6 text-sm text-ink/90">
             <label className="flex items-center gap-2">
-              <input type="checkbox" name="notifyYearly" defaultChecked className="accent-rose-600" />
+              <input type="checkbox" name="notifyYearly" defaultChecked className="accent-violet-500" />
               Évfordulóra emlékeztessen
             </label>
             <label className="flex items-center gap-2">
-              <input type="checkbox" name="notifyMonthly" className="accent-rose-600" />
+              <input type="checkbox" name="notifyMonthly" className="accent-violet-500" />
               Hónapfordulóra is
             </label>
           </div>
@@ -75,21 +75,21 @@ export default async function DatesPage({
       <section>
         <h2 className="mb-3 text-lg font-bold">Elmentett dátumok</h2>
         {dates.length === 0 ? (
-          <p className="card p-8 text-center text-sm text-stone-500">Még nincs elmentett dátumotok.</p>
+          <p className="card p-8 text-center text-sm text-mute">Még nincs elmentett dátumotok.</p>
         ) : (
           <ul className="space-y-3">
             {dates.map((d) => (
               <li key={d.id} className="card flex flex-wrap items-center gap-3 p-4 text-sm">
                 <div>
                   <p className="font-semibold">{d.title}</p>
-                  <p className="text-stone-500">{formatDate(d.date)}</p>
+                  <p className="text-mute">{formatDate(d.date)}</p>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
-                  {d.notifyYearly && <span className="badge bg-rose-50 text-rose-700">évforduló</span>}
-                  {d.notifyMonthly && <span className="badge bg-sky-50 text-sky-700">hónapforduló</span>}
+                  {d.notifyYearly && <span className="badge-brand">évforduló</span>}
+                  {d.notifyMonthly && <span className="badge-sky">hónapforduló</span>}
                   <form action={deleteImportantDate}>
                     <input type="hidden" name="id" value={d.id} />
-                    <button className="text-xs text-stone-400 hover:text-red-600">Törlés</button>
+                    <button className="text-xs text-faint hover:text-red-600 dark:text-red-400">Törlés</button>
                   </form>
                 </div>
               </li>

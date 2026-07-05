@@ -25,13 +25,13 @@ export default async function LoginPage({
         </div>
         <button className="btn-primary w-full">Belépés</button>
         <p className="text-center text-sm">
-          <Link href="/elfelejtett-jelszo" className="text-stone-500 hover:text-rose-600 hover:underline">
+          <Link href="/elfelejtett-jelszo" className="text-mute hover:text-brand hover:underline">
             Elfelejtetted a jelszavadat?
           </Link>
         </p>
-        <p className="text-center text-sm text-stone-500">
+        <p className="text-center text-sm text-mute">
           Még nincs fiókod?{' '}
-          <Link href="/regisztracio" className="font-medium text-rose-600 hover:underline">
+          <Link href="/regisztracio" className="font-medium text-brand hover:underline">
             Regisztrálj itt
           </Link>
         </p>

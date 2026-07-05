@@ -18,7 +18,7 @@ export default async function NewIdeaPage({
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="mb-2 text-2xl font-bold">Új randiötlet beküldése</h1>
-      <p className="mb-6 text-sm text-stone-600">
+      <p className="mb-6 text-sm text-mute">
         {mod
           ? 'Moderátorként az ötleted azonnal megjelenik a gyűjteményben.'
           : 'A javaslatodat a moderátorcsapat átnézi; elfogadás után jelenik meg a gyűjteményben. A döntésről értesítést kapsz.'}

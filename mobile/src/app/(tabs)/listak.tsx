@@ -3,10 +3,11 @@ import { FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { api, type ListSummary } from '../../lib/api';
 import { useAuth } from '../../lib/auth-context';
-import { colors, spacing } from '../../lib/theme';
+import { spacing, useTheme } from '../../lib/theme'
 import { Button, Card, Empty, ErrorText, Input } from '../../components/ui';
 
 export default function ListsScreen() {
+  const t = useTheme();
   const { token } = useAuth();
   const router = useRouter();
   const [lists, setLists] = useState<ListSummary[]>([]);
@@ -48,7 +49,7 @@ export default function ListsScreen() {
       data={lists}
       keyExtractor={(l) => l.id}
       contentContainerStyle={{ padding: spacing.l }}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={t.primary} />}
       ListHeaderComponent={<ErrorText text={error} />}
       renderItem={({ item }) => {
         const pct = item.total === 0 ? 0 : Math.round((item.done / item.total) * 100);
@@ -56,20 +57,20 @@ export default function ListsScreen() {
           <Pressable onPress={() => router.push({ pathname: '/lista/[id]', params: { id: item.id } })}>
             <Card style={{ marginBottom: spacing.m }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ fontWeight: '700', fontSize: 15, color: colors.text, flex: 1 }}>
+                <Text style={{ fontWeight: '700', fontSize: 15, color: t.text, flex: 1 }}>
                   {item.isSystem ? '⭐ ' : ''}{item.title}
                 </Text>
-                <Text style={{ fontSize: 12, color: colors.muted }}>{item.total} ötlet</Text>
+                <Text style={{ fontSize: 12, color: t.muted }}>{item.total} ötlet</Text>
               </View>
               {!!item.description && (
-                <Text style={{ fontSize: 13, color: colors.muted, marginTop: 4 }}>{item.description}</Text>
+                <Text style={{ fontSize: 13, color: t.muted, marginTop: 4 }}>{item.description}</Text>
               )}
               {token && item.total > 0 && (
                 <View style={{ marginTop: spacing.m }}>
-                  <View style={{ height: 6, backgroundColor: '#f5f5f4', borderRadius: 999, overflow: 'hidden' }}>
-                    <View style={{ height: 6, width: `${pct}%`, backgroundColor: colors.primary, borderRadius: 999 }} />
+                  <View style={{ height: 6, backgroundColor: t.bg, borderRadius: 999, overflow: 'hidden' }}>
+                    <View style={{ height: 6, width: `${pct}%`, backgroundColor: t.primary, borderRadius: 999 }} />
                   </View>
-                  <Text style={{ fontSize: 11, color: colors.muted, marginTop: 4 }}>
+                  <Text style={{ fontSize: 11, color: t.muted, marginTop: 4 }}>
                     {item.done}/{item.total} teljesítve ({pct}%)
                   </Text>
                 </View>
@@ -82,7 +83,7 @@ export default function ListsScreen() {
       ListFooterComponent={
         token ? (
           <Card style={{ marginTop: spacing.s, gap: spacing.m }}>
-            <Text style={{ fontWeight: '700', color: colors.text }}>+ Új saját lista</Text>
+            <Text style={{ fontWeight: '700', color: t.text }}>+ Új saját lista</Text>
             <Input placeholder="A lista neve (pl. Nagy közös terveink)" value={newTitle} onChangeText={setNewTitle} />
             <Button title="Lista létrehozása" onPress={create} disabled={newTitle.trim().length < 3} />
           </Card>

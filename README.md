@@ -1,10 +1,15 @@
-# 💛 Kettesben
+# 💜 Kettesben
 
 **Páros randiötlet-gyűjtemény és randinapló** — inspiráció, bakancslisták, közös emlékek és
 partnerkedvezmények minden korosztályú párnak. Nem csak az összejövést segíti, az együtt
 maradást is.
 
-A teljes termék- és rendszerterv: **[SPECIFICATION.md](./SPECIFICATION.md)**
+A teljes termék- és rendszerterv: **[SPECIFICATION.md](./SPECIFICATION.md)** ·
+Üzemeltetői kézikönyv: **[OPERATIONS.md](./OPERATIONS.md)**
+
+**Design:** merész, fiatalos lila–fukszia arculat lime kiemelésekkel, teljes **dark mode**
+támogatással (weben váltógombbal + rendszerkövetéssel, mobilon rendszerkövetéssel).
+A logó két gyűrűsfarkú **lemur farka**, amelyek egy pontatlan szívet formálnak. 🐒💜
 
 ## Funkciók
 
@@ -32,8 +37,10 @@ A teljes termék- és rendszerterv: **[SPECIFICATION.md](./SPECIFICATION.md)**
   kattintható #címkék az ötleteken
 - 🎫 **Partnerprogram** — egyedi, beváltás-követett kuponkódok; partner önkiszolgáló felület
   (`/partner`): beváltás a helyszínen + statisztika
-- 🛡️ **Üzemeltetés** — GitHub Actions CI, rate limiting az auth útvonalakon, GDPR adatexport
-  és fióktörlés a profilról
+- 🛡️ **Üzemeltetés** — GitHub Actions CI (tesztek + build + API füstteszt + Docker),
+  Docker + compose beépített cron-nal, `/api/health` életjel, `/api/metrics`
+  Prometheus-metrikák, rate limiting, GDPR adatexport és fióktörlés;
+  részletek: [OPERATIONS.md](./OPERATIONS.md)
 
 ## Gyors indítás
 
