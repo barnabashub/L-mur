@@ -6,3 +6,7 @@ node_modules/
 public/uploads/*
 !public/uploads/.gitkeep
 *.tsbuildinfo
+mobile/node_modules/
+mobile/dist/
+mobile/.expo/
+mobile/expo-env.d.ts

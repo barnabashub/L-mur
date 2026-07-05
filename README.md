@@ -24,6 +24,9 @@ A teljes termék- és rendszerterv: **[SPECIFICATION.md](./SPECIFICATION.md)**
 - 🔑 **Jelszó-visszaállítás és e-mail-megerősítés** — egyszer használatos, hashelve tárolt, lejáró tokenekkel
 - ⏰ **Évforduló-emlékeztető cron** — `GET /api/cron/emlekeztetok` (Bearer `CRON_SECRET`), a pár
   mindkét tagjának app-értesítés + e-mail, fordulónkénti deduplikálással
+- 📱 **Mobil alkalmazás (iOS + Android)** — Expo/React Native kliens a `mobile/` mappában, saját
+  REST API-val (`/api/v1/*`, Bearer token); részletek: [mobile/README.md](./mobile/README.md)
+- 🏠 **PWA** — a webapp kezdőképernyőre telepíthető (manifest + ikonok)
 
 ## Gyors indítás
 
@@ -52,6 +55,7 @@ npm run dev       # http://localhost:3000
 | `npm test` | egységtesztek (Vitest) — dátumlogika, jogosultsági szabályok |
 | `npm run test:e2e` | böngészős füstteszt (playwright-core; futó szerver + friss seed kell hozzá) |
 | `node e2e/phase2.mjs` | böngészős teszt a kommunikációs folyamatokra (megerősítés, jelszóreset, cron) |
+| `bash e2e/api-test.sh` | a REST API (v1) end-to-end tesztje (27 ellenőrzés) |
 | `npm run db:push` | Prisma séma szinkronizálása az adatbázisba |
 | `npm run db:seed` | demó-adatok újratöltése |
 
@@ -84,9 +88,15 @@ egységtesztelt függvényekben élnek: `src/lib/permissions.ts`.
 prisma/            séma + seed
 src/app/           oldalak (App Router) — otletek, bakancslistak, naplo, datumok,
                    par, profil, moderacio, partnerek, ertesitesek, belepes, regisztracio
+src/app/api/v1/    REST API a mobil/natív klienseknek (Bearer token, CORS)
 src/components/    közös UI-komponensek
-src/lib/           db, auth, session, jogosultságok, dátumlogika, feltöltés
+src/lib/           db, auth, session, jogosultságok, dátumlogika, feltöltés, levelezés
 src/lib/actions/   server actionök (auth, ideas, lists, couple, journal, moderation)
+mobile/            Expo (React Native) mobilalkalmazás — iOS + Android
 tests/             egységtesztek
-e2e/               böngészős füstteszt
+e2e/               böngészős és API end-to-end tesztek
 ```
+
+## REST API (v1)
+
+A mobilapp (és bármilyen integráció) a `/api/v1/*` végpontokat használja `Authorization: Bearer <token>` fejléccel. Token: `POST /api/v1/auth/login` vagy `/auth/register`. Fő végpontok: `/me`, `/ideas`, `/ideas/:id`, `/ideas/:id/complete` (multipart képpel), `/ideas/:id/review`, `/lists`, `/lists/:id/items`, `/journal`, `/notifications`, `/couple`, `/dates`. Minden válasz `{ data }` vagy `{ error }` alakú; a webes láthatósági szabályok itt is érvényesek.

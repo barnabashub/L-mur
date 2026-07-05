@@ -164,7 +164,19 @@ cron végpont (`/api/cron/emlekeztetok`, Bearer-titokkal, fordulónkénti dedupe
 A *web push* a HTTPS- és service-worker-igénye miatt a Fázis 5 (üzemeltetés) részeként ésszerű.
 **Fázis 3 — tartalom és felfedezés:** térképnézet (koordináták már a modellben előkészíthetők), címkék a kategóriák mellett, „ötlet a mai napra" ajánló, szezonális főoldali kiemelések, többnyelvűség (EN).
 **Fázis 4 — partnerprogram:** partner önkiszolgáló felület, kuponbeváltás-követés (egyedi kódok, statisztika), Három Királyfi mozgalom közös kampányai.
-**Fázis 5 — üzemeltetés:** PostgreSQL + S3, CI/CD, monitoring, rate limiting, CDN a képekhez, GDPR-export/törlés, mobilalkalmazás (a szerveroldal REST-re nyitható).
+**Fázis — mobil (iOS + Android):** ✅ **megvalósítva** —
+- **REST API v1** (`/api/v1/*`): Bearer-tokenes auth (a webes munkamenettől független, `api`
+  audience-szel), végpontok: auth/regisztráció, profil, ötletek (lista/részletek/beküldés),
+  kipipálás (multipart képfeltöltéssel), értékelés, bakancslisták, napló, értesítések,
+  pár-műveletek, fontos dátumok. A láthatósági szabályok az API-ban is érvényesülnek
+  (kuponkód csak belépve, privát szöveg csak a párnak). CORS engedélyezve.
+- **Expo (React Native) alkalmazás** (`mobile/`): egy kódbázis iPhone-ra és Androidra;
+  öt fül (Ötletek, Listák, Naplónk, Értesítések, Profil) + ötlet- és listaképernyők,
+  kipipálás fotóval (expo-image-picker), token az expo-secure-store-ban, áruházi
+  azonosítók beállítva (`hu.kettesben.app`), kiadás EAS Builddel.
+- **PWA**: a webapp telepíthető kezdőképernyőre (manifest + ikonok, standalone mód).
+
+**Fázis 5 — üzemeltetés:** PostgreSQL + S3, CI/CD, monitoring, rate limiting, CDN a képekhez, GDPR-export/törlés, web push az évfordulókhoz.
 
 ## 8. Nyitott kérdések — döntésekkel
 

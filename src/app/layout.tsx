@@ -8,6 +8,15 @@ export const metadata: Metadata = {
   title: { default: 'Kettesben — randiötletek pároknak', template: '%s · Kettesben' },
   description:
     'Páros randiötlet-gyűjtemény és randinapló: inspiráció, bakancslisták, közös emlékek és partnerkedvezmények — minden korosztályú párnak.',
+  icons: {
+    icon: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Kettesben' },
+};
+
+export const viewport = {
+  themeColor: '#e11d48',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
