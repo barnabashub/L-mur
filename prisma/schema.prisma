@@ -1,0 +1,199 @@
+// Kettesben — adatmodell
+// SQLite-on futunk (a Prisma SQLite-on nem támogat enumot, ezért a
+// felsorolás-jellegű mezők String típusúak; az érvényes értékeket a
+// src/lib/constants.ts rögzíti és a Zod sémák kényszerítik ki).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("USER") // USER | MODERATOR | ADMIN
+  status       String   @default("ACTIVE") // ACTIVE | SUSPENDED
+  createdAt    DateTime @default(now())
+
+  coupleId String?
+  couple   Couple? @relation(fields: [coupleId], references: [id])
+
+  ideas              DateIdea[]
+  reviews            Review[]
+  completions        Completion[]
+  bucketLists        BucketList[]
+  memories           Memory[]
+  importantDates     ImportantDate[]
+  notifications      Notification[]
+  moderationRequests ModerationRequest[]
+  actionsGiven       ModerationAction[]  @relation("moderator")
+  actionsReceived    ModerationAction[]  @relation("targetUser")
+}
+
+model Couple {
+  id         String   @id @default(cuid())
+  inviteCode String   @unique
+  createdAt  DateTime @default(now())
+  members    User[]
+}
+
+model DateIdea {
+  id                    String  @id @default(cuid())
+  title                 String
+  description           String
+  imagePath             String?
+  category              String
+  locationName          String?
+  isLocationIndependent Boolean @default(false)
+  isSeasonal            Boolean @default(false)
+  seasonLabel           String?
+  status                String  @default("PENDING") // PENDING | APPROVED | REJECTED
+  rejectionNote         String?
+
+  submitterId String
+  submitter   User    @relation(fields: [submitterId], references: [id])
+  partnerId   String?
+  partner     Partner? @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews            Review[]
+  completions        Completion[]
+  listItems          BucketListItem[]
+  moderationRequests ModerationRequest[]
+  moderationActions  ModerationAction[]
+
+  @@index([status, category])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  ideaId    String
+  idea      DateIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  stars     Int
+  text      String?
+  createdAt DateTime @default(now())
+
+  @@unique([ideaId, userId])
+}
+
+model Completion {
+  id          String   @id @default(cuid())
+  ideaId      String
+  idea        DateIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  date        DateTime
+  imagePath   String?
+  imagePublic Boolean  @default(false)
+  publicText  String?
+  privateText String?
+  createdAt   DateTime @default(now())
+
+  @@index([ideaId])
+  @@index([userId])
+}
+
+// Appon kívüli randi emléke — mindig privát, a pár két tagja látja.
+model Memory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  date      DateTime
+  imagePath String?
+  text      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model BucketList {
+  id          String   @id @default(cuid())
+  ownerId     String?
+  owner       User?    @relation(fields: [ownerId], references: [id])
+  title       String
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  items       BucketListItem[]
+}
+
+model BucketListItem {
+  id     String     @id @default(cuid())
+  listId String
+  list   BucketList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  ideaId String
+  idea   DateIdea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  order  Int        @default(0)
+
+  @@unique([listId, ideaId])
+}
+
+model ImportantDate {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  title         String
+  date          DateTime
+  notifyYearly  Boolean  @default(true)
+  notifyMonthly Boolean  @default(false)
+}
+
+model Partner {
+  id           String  @id @default(cuid())
+  name         String
+  description  String?
+  website      String?
+  discountText String
+  couponCode   String
+  ideas        DateIdea[]
+}
+
+model ModerationRequest {
+  id         String   @id @default(cuid())
+  ideaId     String
+  idea       DateIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  message    String
+  status     String   @default("OPEN") // OPEN | RESOLVED
+  resolution String?
+  createdAt  DateTime @default(now())
+}
+
+// Moderátori műveletek audit naplója.
+model ModerationAction {
+  id           String    @id @default(cuid())
+  type         String // APPROVE | REJECT | EDIT | WARN | SUSPEND | UNSUSPEND | RESOLVE_REQUEST
+  moderatorId  String
+  moderator    User      @relation("moderator", fields: [moderatorId], references: [id])
+  targetUserId String?
+  targetUser   User?     @relation("targetUser", fields: [targetUserId], references: [id])
+  ideaId       String?
+  idea         DateIdea? @relation(fields: [ideaId], references: [id])
+  message      String?
+  createdAt    DateTime  @default(now())
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  message   String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+}
