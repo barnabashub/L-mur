@@ -10,6 +10,7 @@ import { completeIdea, requestModeration, reviewIdea } from '@/lib/actions/ideas
 import { addToList } from '@/lib/actions/lists';
 import { requestCoupon } from '@/lib/actions/coupons';
 import { parseTags } from '@/lib/discover';
+import { ACCESSIBILITY_BY_KEY } from '@/lib/constants';
 import { IdeaImage } from '@/components/IdeaImage';
 import { Stars, StarInput } from '@/components/Stars';
 import { Flash } from '@/components/Flash';
@@ -78,6 +79,14 @@ export default async function IdeaPage({
             {idea.isSeasonal && idea.seasonLabel && (
               <span className="badge-sky">📅 {idea.seasonLabel}</span>
             )}
+            {parseTags(idea.accessibility).map((key) => {
+              const opt = ACCESSIBILITY_BY_KEY[key];
+              return opt ? (
+                <Link key={key} href={`/otletek?akadalymentes=${key}`} className="badge-lime">
+                  {opt.emoji} {opt.label}
+                </Link>
+              ) : null;
+            })}
             {parseTags(idea.tags).map((tag) => (
               <Link key={tag} href={`/otletek?cimke=${encodeURIComponent(tag)}`} className="badge-soft hover:brightness-95 dark:hover:brightness-125">
                 #{tag}
@@ -107,7 +116,7 @@ export default async function IdeaPage({
 
       {idea.partner && (
         <section className="panel-amber p-6">
-          <h2 className="font-bold text-amber-900 dark:text-amber-200">🎟️ Kedvezmény a Kettesben-pároknak</h2>
+          <h2 className="font-bold text-amber-900 dark:text-amber-200">🎟️ Kedvezmény a L’mur-pároknak</h2>
           <p className="mt-1 text-sm text-amber-900 dark:text-amber-200">
             <strong>{idea.partner.name}</strong>: {idea.partner.discountText}
           </p>

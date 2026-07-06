@@ -30,7 +30,7 @@ export default async function CouplePage({
           <h2 className="font-bold">Összekapcsolva ✔</h2>
           <p className="mt-2 text-sm text-ink/90">
             A párod: <strong>{partner.name}</strong>
-            {user.couple && <> · együtt a Kettesben-en: {formatDate(user.couple.createdAt)} óta</>}
+            {user.couple && <> · együtt a L’muron: {formatDate(user.couple.createdAt)} óta</>}
           </p>
           <form action={leaveCouple} className="mt-4">
             <button className="btn-danger">Szétkapcsolás</button>

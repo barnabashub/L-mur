@@ -1,6 +1,6 @@
-# Kettesben — mobil alkalmazás (iOS + Android)
+# L’mur — mobil alkalmazás (iOS + Android)
 
-Natív mobilkliens a Kettesben REST API-jához, **Expo (React Native)** alapon — egy kódbázisból
+Natív mobilkliens a L’mur REST API-jához, **Expo (React Native)** alapon — egy kódbázisból
 fut iPhone-on és Androidon.
 
 ## Képernyők
@@ -43,5 +43,5 @@ eas build --platform android   # Play Áruházhoz (.aab)
 eas submit                     # feltöltés az áruházakba
 ```
 
-Az azonosítók be vannak állítva: `hu.kettesben.app` (iOS bundle id + Android package).
+Az azonosítók be vannak állítva: `hu.lmur.app` (iOS bundle id + Android package).
 Élesben az `EXPO_PUBLIC_API_URL`-t a publikus szerver címére állítsd (EAS build profilban).

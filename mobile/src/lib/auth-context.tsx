@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { api, type Me } from './api';
 
 /** A token tárolása: natívan SecureStore, weben localStorage. */
-const TOKEN_KEY = 'kettesben_token';
+const TOKEN_KEY = 'lmur_token';
 
 async function loadToken(): Promise<string | null> {
   if (Platform.OS === 'web') return globalThis.localStorage?.getItem(TOKEN_KEY) ?? null;

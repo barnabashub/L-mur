@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { api, imageUrl, type IdeaDetail, type ListSummary } from '../../lib/api';
 import { useAuth } from '../../lib/auth-context';
 import { spacing, useTheme } from '../../lib/theme'
+import { ACCESSIBILITY_LABELS } from '../../components/IdeaCard';
 import { Badge, Button, Card, Empty, ErrorText, Input, Label, StarPicker, Stars } from '../../components/ui';
 
 function formatDate(d: string) {
@@ -135,6 +136,11 @@ export default function IdeaScreen() {
               tone="muted"
             />
             {idea.isSeasonal && idea.seasonLabel && <Badge text={`📅 ${idea.seasonLabel}`} tone="muted" />}
+            {(idea.accessibility ?? []).map((k) =>
+              ACCESSIBILITY_LABELS[k] ? (
+                <Badge key={k} text={`${ACCESSIBILITY_LABELS[k].emoji} ${ACCESSIBILITY_LABELS[k].label}`} tone="green" />
+              ) : null
+            )}
           </View>
           <Text style={{ fontSize: 22, fontWeight: '800', color: t.text }}>{idea.title}</Text>
           <View style={{ flexDirection: 'row', gap: spacing.l, alignItems: 'center' }}>
@@ -150,7 +156,7 @@ export default function IdeaScreen() {
 
       {idea.partner && (
         <Card style={{ backgroundColor: t.amberBg, borderColor: 'rgba(251, 191, 36, 0.4)', gap: 6 }}>
-          <Text style={{ fontWeight: '700', color: t.amber }}>🎟️ Kedvezmény a Kettesben-pároknak</Text>
+          <Text style={{ fontWeight: '700', color: t.amber }}>🎟️ Kedvezmény a L’mur-pároknak</Text>
           <Text style={{ fontSize: 13, color: t.amber }}>
             {idea.partner.name}: {idea.partner.discountText}
           </Text>

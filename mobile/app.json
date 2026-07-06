@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Kettesben",
-    "slug": "kettesben",
+    "name": "L’mur",
+    "slug": "lmur",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kettesben",
+    "scheme": "lmur",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "hu.kettesben.app",
+      "bundleIdentifier": "hu.lmur.app",
       "supportsTablet": true
     },
     "android": {
@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "hu.kettesben.app"
+      "package": "hu.lmur.app"
     },
     "web": {
       "output": "static",

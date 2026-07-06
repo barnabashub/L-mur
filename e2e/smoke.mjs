@@ -77,7 +77,7 @@ ok('értékelés: sikerüzenet', true);
 
 // 6) Moderátor: javaslat elfogadása
 await logout();
-await login('mod@kettesben.hu');
+await login('mod@lmur.hu');
 await page.goto(BASE + '/moderacio');
 ok('moderáció: várakozó javaslat látszik', (await page.textContent('main')).includes('Kutyás menhelylátogatás'));
 await page.click('button:has-text("Elfogadás és publikálás")');

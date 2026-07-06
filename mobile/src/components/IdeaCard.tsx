@@ -5,6 +5,14 @@ import { imageUrl, type IdeaSummary } from '../lib/api';
 import { radius, spacing, useTheme } from '../lib/theme';
 import { Badge, Stars } from './ui';
 
+export const ACCESSIBILITY_LABELS: Record<string, { emoji: string; label: string }> = {
+  'kerekesszek': { emoji: '♿', label: 'Kerekesszékkel megközelíthető' },
+  'latasserult': { emoji: '🦯', label: 'Látássérült-barát' },
+  'hallasserult': { emoji: '🦻', label: 'Hallássérült-barát' },
+  'babakocsi': { emoji: '👶', label: 'Babakocsival járható' },
+  'keves-seta': { emoji: '🪑', label: 'Kevés sétával teljesíthető' },
+};
+
 const CATEGORY_EMOJI: Record<string, string> = {
   'Természet': '🌲',
   'Kultúra': '🏛️',
@@ -24,6 +32,8 @@ export function IdeaCard({ idea, completed }: { idea: IdeaSummary; completed?: b
   return (
     <Pressable
       onPress={() => router.push({ pathname: '/otlet/[id]', params: { id: idea.id } })}
+      accessibilityRole="button"
+      accessibilityLabel={`${idea.title} megnyitása`}
       style={({ pressed }) => [
         styles.card,
         { backgroundColor: t.card, borderColor: t.border },
@@ -42,6 +52,11 @@ export function IdeaCard({ idea, completed }: { idea: IdeaSummary; completed?: b
           <Badge text={idea.category} />
           {idea.hasDiscount && <Badge text="🎟️ kedvezmény" tone="amber" />}
           {completed && <Badge text="✔ teljesítve" tone="green" />}
+          {(idea.accessibility ?? []).map((k) =>
+            ACCESSIBILITY_LABELS[k] ? (
+              <Badge key={k} text={ACCESSIBILITY_LABELS[k].emoji} tone="green" />
+            ) : null
+          )}
         </View>
         <Text style={[styles.title, { color: t.text }]}>{idea.title}</Text>
         <Text style={{ fontSize: 12, color: t.muted }}>

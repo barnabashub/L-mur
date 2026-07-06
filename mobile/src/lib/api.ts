@@ -1,5 +1,5 @@
 /**
- * Kettesben REST API (v1) kliens.
+ * L’mur REST API (v1) kliens.
  * Az API alap-URL-je az EXPO_PUBLIC_API_URL környezeti változóval adható meg
  * (fejlesztésnél pl. a gépeden futó szerver LAN-címe: http://192.168.1.10:3000).
  */
@@ -21,6 +21,7 @@ export type IdeaSummary = {
   reviewCount: number;
   completionCount: number;
   hasDiscount: boolean;
+  accessibility?: string[];
 };
 
 export type IdeaDetail = IdeaSummary & {

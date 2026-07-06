@@ -1,7 +1,8 @@
-import { CATEGORIES } from '@/lib/constants';
+import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
 
 type Defaults = {
   title?: string;
+  accessibility?: string | null;
   description?: string;
   category?: string;
   locationName?: string | null;
@@ -58,6 +59,23 @@ export function IdeaFormFields({ defaults = {} }: { defaults?: Defaults }) {
             defaultValue={defaults.seasonLabel ?? ''} placeholder="pl. május–június, vagy: minden adventi hétvégén" />
         </div>
       </div>
+      <fieldset>
+        <legend className="label">Akadálymentesség — kinek ajánlható nyugodt szívvel?</legend>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {ACCESSIBILITY_OPTIONS.map((o) => (
+            <label key={o.key} className="flex items-center gap-2 text-sm text-ink/90">
+              <input
+                type="checkbox"
+                name="accessibility"
+                value={o.key}
+                className="accent-violet-500"
+                defaultChecked={(defaults.accessibility ?? '').split(',').map((k) => k.trim()).includes(o.key)}
+              />
+              {o.emoji} {o.label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <div>
         <label className="label" htmlFor="image">Fotó (opcionális, max. 5 MB)</label>
         <input className="input" type="file" id="image" name="image" accept="image/*" />

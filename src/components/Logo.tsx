@@ -1,5 +1,5 @@
 /**
- * Kettesben logó: két gyűrűsfarkú lemur farka, amelyek egy szándékosan
+ * L’mur logó: két gyűrűsfarkú lemur farka, amelyek egy szándékosan
  * pontatlan szív alakot formálnak. A gyűrűket a farok-útvonalra húzott
  * szaggatott második vonal adja.
  */
@@ -11,14 +11,14 @@ export function Logo({ className = 'h-8 w-8' }: { className?: string }) {
   return (
     <svg viewBox="0 0 120 120" className={className} aria-hidden="true">
       <defs>
-        <linearGradient id="lemur-grad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="lmur-grad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#8b5cf6" />
           <stop offset="1" stopColor="#ec4899" />
         </linearGradient>
       </defs>
       {[left, right].map((d, i) => (
         <g key={i}>
-          <path d={d} fill="none" stroke="url(#lemur-grad)" strokeWidth="11.5" strokeLinecap="round" />
+          <path d={d} fill="none" stroke="url(#lmur-grad)" strokeWidth="11.5" strokeLinecap="round" />
           <path
             d={d}
             fill="none"

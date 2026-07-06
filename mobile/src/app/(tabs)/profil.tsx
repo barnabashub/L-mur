@@ -19,7 +19,7 @@ export default function ProfileScreen() {
       <View style={{ padding: spacing.l, gap: spacing.m }}>
         <Card style={{ gap: spacing.m, alignItems: 'center', padding: spacing.xl }}>
           <Text style={{ fontSize: 40 }}>💜</Text>
-          <Text style={{ fontWeight: '700', fontSize: 17, color: t.text }}>Üdvözlünk a Kettesben-ben!</Text>
+          <Text style={{ fontWeight: '700', fontSize: 17, color: t.text }}>Üdvözlünk a L’murnál!</Text>
           <Text style={{ color: t.muted, textAlign: 'center', fontSize: 13 }}>
             Lépj be vagy regisztrálj, hogy pipálhass, listázhass és közös naplót vezethessetek.
           </Text>

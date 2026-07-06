@@ -1,5 +1,5 @@
-# Kettesben — production konténer
-# Build:  docker build -t kettesben .
+# L’mur — production konténer
+# Build:  docker build -t lmur .
 # Futás:  lásd docker-compose.yml (adatbázis- és feltöltés-kötettel)
 
 # ---- 1. függőségek + build ----

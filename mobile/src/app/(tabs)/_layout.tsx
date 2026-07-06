@@ -23,7 +23,7 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: t.bg },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Ötletek', headerTitle: '💛 Kettesben', tabBarIcon: icon('💡') }} />
+      <Tabs.Screen name="index" options={{ title: 'Ötletek', headerTitle: 'L’mur', tabBarIcon: icon('💡') }} />
       <Tabs.Screen name="listak" options={{ title: 'Listák', headerTitle: 'Bakancslisták', tabBarIcon: icon('📝') }} />
       <Tabs.Screen name="naplo" options={{ title: 'Naplónk', headerTitle: 'Randinaplónk 🔒', tabBarIcon: icon('📖') }} />
       <Tabs.Screen name="ertesitesek" options={{ title: 'Értesítések', tabBarIcon: icon('🔔') }} />

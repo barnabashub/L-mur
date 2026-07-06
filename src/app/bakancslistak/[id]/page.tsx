@@ -66,7 +66,7 @@ export default async function ListPage({
           <h1 className="text-2xl font-bold">{list.isSystem && '⭐ '}{list.title}</h1>
           {list.description && <p className="mt-1 text-mute">{list.description}</p>}
           <p className="mt-1 text-xs text-faint">
-            {list.isSystem ? 'Gyári lista a Kettesben csapatától' : `Saját listátok`}
+            {list.isSystem ? 'Gyári lista a L’mur csapatától' : `Saját listátok`}
           </p>
         </div>
         {isOwner && (

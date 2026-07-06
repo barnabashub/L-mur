@@ -1,8 +1,8 @@
 {
-  "name": "kettesben",
+  "name": "lmur",
   "version": "1.0.0",
   "private": true,
-  "description": "Kettesben — páros randiötlet-gyűjtemény és randinapló",
+  "description": "L’mur — páros randiötlet-gyűjtemény és randinapló",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

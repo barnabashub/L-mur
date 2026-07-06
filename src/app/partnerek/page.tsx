@@ -24,7 +24,7 @@ export default async function PartnersPage({
         <h1 className="text-2xl font-bold">Partnereink 🤝</h1>
         <p className="mt-1 max-w-2xl text-sm text-mute">
           Olyan helyekkel és szervezetekkel dolgozunk együtt, akik hisznek abban, hogy a
-          párkapcsolatokba érdemes időt fektetni. A Kettesben-felhasználók a partnereinknél
+          párkapcsolatokba érdemes időt fektetni. A L’mur-felhasználók a partnereinknél
           kedvezményt kapnak a randijukhoz — a kuponkódot bejelentkezés után az ötlet oldalán
           találjátok.
         </p>

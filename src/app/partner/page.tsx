@@ -61,14 +61,14 @@ export default async function PartnerDashboard({
       <section className="card p-6">
         <h2 className="mb-1 text-lg font-bold">Kupon beváltása a helyszínen</h2>
         <p className="mb-4 text-sm text-mute">
-          Kérd el a vendégtől az egyedi kódját (KET-…), és írd be ide.
+          Kérd el a vendégtől az egyedi kódját (LEM-…), és írd be ide.
         </p>
         <form action={redeemCoupon} className="flex flex-wrap gap-2">
           <input
             className="input max-w-60 font-mono uppercase tracking-widest"
             name="code"
             required
-            placeholder="KET-XXXX"
+            placeholder="LEM-XXXX"
           />
           <button className="btn-primary">Beváltás ✔</button>
         </form>

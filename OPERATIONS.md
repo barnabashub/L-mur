@@ -1,6 +1,6 @@
-# Kettesben — üzemeltetői kézikönyv
+# L’mur — üzemeltetői kézikönyv
 
-Ez a dokumentum a Kettesben éles üzemeltetéséhez szükséges tudnivalókat tartalmazza:
+Ez a dokumentum a L’mur éles üzemeltetéséhez szükséges tudnivalókat tartalmazza:
 telepítés, konfiguráció, monitoring, mentés, riasztások és incidenskezelés.
 
 ## 1. Telepítés
@@ -16,7 +16,7 @@ SEED_DEMO=1 docker compose up -d --build
 
 - Az alkalmazás a `3000`-es porton fut; elé HTTPS-terminráló reverse proxy javasolt
   (Caddy/nginx/Traefik). A Caddy két sorból megoldja a TLS-t:
-  `kettesben.hu { reverse_proxy localhost:3000 }`
+  `lmur.hu { reverse_proxy localhost:3000 }`
 - Az adatbázis és a feltöltött képek a `./data` kötetben élnek — **ezt kell menteni**.
 - A `cron` konténer minden nap 7:00-kor kiküldi az évforduló-emlékeztetőket.
 
@@ -24,7 +24,7 @@ SEED_DEMO=1 docker compose up -d --build
 
 ```bash
 npm ci && cp .env.example .env && npx prisma db push && npm run build
-npx next start -p 3000     # PM2: pm2 start "npx next start -p 3000" --name kettesben
+npx next start -p 3000     # PM2: pm2 start "npx next start -p 3000" --name lmur
 # cron (naponta): 0 7 * * * curl -sf -H "Authorization: Bearer $CRON_SECRET" $APP_URL/api/cron/emlekeztetok
 ```
 
@@ -32,7 +32,7 @@ npx next start -p 3000     # PM2: pm2 start "npx next start -p 3000" --name kett
 
 | Változó | Kötelező | Leírás |
 |---|---|---|
-| `DATABASE_URL` | ✔ | SQLite: `file:/data/kettesben.db`; Postgres: `postgresql://…` |
+| `DATABASE_URL` | ✔ | SQLite: `file:/data/lmur.db`; Postgres: `postgresql://…` |
 | `SESSION_SECRET` | ✔ | munkamenet- és API-tokenek aláírókulcsa — erős, egyedi titok! Cseréje minden munkamenetet érvénytelenít. |
 | `CRON_SECRET` | ✔ | az emlékeztető-végpont Bearer titka |
 | `APP_URL` | ✔ | publikus URL — az e-mailekben lévő linkekhez |
@@ -55,10 +55,10 @@ npx next start -p 3000     # PM2: pm2 start "npx next start -p 3000" --name kett
 
 ```yaml
 scrape_configs:
-  - job_name: kettesben
+  - job_name: lmur
     metrics_path: /api/metrics
     authorization: { credentials: '<METRICS_TOKEN>' }
-    static_configs: [{ targets: ['kettesben.hu'] }]
+    static_configs: [{ targets: ['lmur.hu'] }]
     scheme: https
 ```
 
@@ -67,8 +67,8 @@ scrape_configs:
 | Riasztás | Feltétel | Jelentés |
 |---|---|---|
 | App down | `/api/health` != 200 3 percen át | kiesés — azonnali beavatkozás |
-| Moderációs torlódás | `kettesben_ideas_pending_total > 20` 24 órán át | kevés a moderátor / elakadt a folyamat |
-| E-mail hibák | `kettesben_emails_failed_total` növekszik | SMTP-hitelesítés/limit probléma |
+| Moderációs torlódás | `lmur_ideas_pending_total > 20` 24 órán át | kevés a moderátor / elakadt a folyamat |
+| E-mail hibák | `lmur_emails_failed_total` növekszik | SMTP-hitelesítés/limit probléma |
 | Memória | `process_resident_memory_bytes > 1.5e9` | memória-szivárgás gyanú, újraindítás + vizsgálat |
 
 ### Hibakövetés (Sentry — opcionális)
@@ -84,7 +84,7 @@ add meg. A szerveroldali hibák (server actionök, API route-ok) automatikusan b
 
 ## 4. Mentés és visszaállítás
 
-- **SQLite**: a `./data` könyvtár másolása (app leállítása nélkül: `sqlite3 data/kettesben.db ".backup data/backup-$(date +%F).db"`). Javasolt: napi cron + heti offsite másolat.
+- **SQLite**: a `./data` könyvtár másolása (app leállítása nélkül: `sqlite3 data/lmur.db ".backup data/backup-$(date +%F).db"`). Javasolt: napi cron + heti offsite másolat.
 - **Feltöltött képek**: `./data/uploads` (a compose ide köti a `public/uploads`-ot).
 - **Postgres**: `pg_dump` naponta; visszaállítás `psql < dump.sql`.
 - Visszaállítás-teszt: negyedévente állítsd vissza a mentést egy ideiglenes környezetbe
@@ -113,7 +113,7 @@ add meg. A szerveroldali hibák (server actionök, API route-ok) automatikusan b
 
 | Tünet | Valószínű ok | Teendő |
 |---|---|---|
-| 503 a /api/health-en | DB-fájl zárolva/sérült, kötet betelt | `df -h`; SQLite integritás: `sqlite3 kettesben.db "PRAGMA integrity_check"`; szükség esetén mentés-visszaállítás |
+| 503 a /api/health-en | DB-fájl zárolva/sérült, kötet betelt | `df -h`; SQLite integritás: `sqlite3 lmur.db "PRAGMA integrity_check"`; szükség esetén mentés-visszaállítás |
 | Senki nem tud belépni | SESSION_SECRET megváltozott | szándékos volt? ha nem: állítsd vissza a korábbi titkot |
 | Nem mennek az e-mailek | SMTP hiba | Moderáció → E-mail napló: FAILED sorok hibaüzenete; SMTP-fiók limit/jelszó ellenőrzése |
 | 429-ek éles felhasználóknál | közös kimenő IP (céges NAT) veri ki a rate limitet | limit emelése az érintett útvonalon, vagy Redis-alapú, felhasználónkénti limit |

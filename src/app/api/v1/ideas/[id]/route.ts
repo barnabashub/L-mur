@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { avgStars } from '@/lib/ideas';
 import { canViewPrivate } from '@/lib/permissions';
+import { parseTags } from '@/lib/discover';
 import { apiError, apiOk, getApiUser } from '@/lib/api-auth';
 
 /** GET /api/v1/ideas/:id — ötlet részletei (a láthatósági szabályok szerint). */
@@ -34,6 +35,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     isLocationIndependent: idea.isLocationIndependent,
     isSeasonal: idea.isSeasonal,
     seasonLabel: idea.seasonLabel,
+    accessibility: parseTags(idea.accessibility),
     submitterName: idea.submitter.name,
     createdAt: idea.createdAt,
     updatedAt: idea.updatedAt,

@@ -1,10 +1,10 @@
 /**
- * Determinisztikus demó-adatok a Kettesben alkalmazáshoz.
+ * Determinisztikus demó-adatok a L’mur alkalmazáshoz.
  * Futtatás: npm run db:seed  (a `npm run setup` is meghívja)
  *
  * Demó fiókok (jelszó mindenhol: titok123!):
- *   admin@kettesben.hu  — admin
- *   mod@kettesben.hu    — moderátor
+ *   admin@lmur.hu  — admin
+ *   mod@lmur.hu    — moderátor
  *   anna@example.com    — felhasználó (Bencével párban)
  *   bence@example.com   — felhasználó (Annával párban)
  *   kata@example.com    — felhasználó (pár nélkül)
@@ -41,8 +41,8 @@ async function main() {
   const couple = await db.couple.create({ data: { inviteCode: 'ANNABE' } });
   const verified = new Date();
   const [admin, mod, anna, bence, kata] = await Promise.all([
-    db.user.create({ data: { email: 'admin@kettesben.hu', name: 'Kettesben Admin', passwordHash: hash, role: 'ADMIN', emailVerifiedAt: verified } }),
-    db.user.create({ data: { email: 'mod@kettesben.hu', name: 'Moderátor Márta', passwordHash: hash, role: 'MODERATOR', emailVerifiedAt: verified } }),
+    db.user.create({ data: { email: 'admin@lmur.hu', name: 'L’mur Admin', passwordHash: hash, role: 'ADMIN', emailVerifiedAt: verified } }),
+    db.user.create({ data: { email: 'mod@lmur.hu', name: 'Moderátor Márta', passwordHash: hash, role: 'MODERATOR', emailVerifiedAt: verified } }),
     db.user.create({ data: { email: 'anna@example.com', name: 'Kiss Anna', passwordHash: hash, coupleId: couple.id, emailVerifiedAt: verified } }),
     db.user.create({ data: { email: 'bence@example.com', name: 'Nagy Bence', passwordHash: hash, coupleId: couple.id, emailVerifiedAt: verified } }),
     // Kata szándékosan megerősítetlen — így látszik a demóban a figyelmeztető sáv.
@@ -53,7 +53,7 @@ async function main() {
     db.partner.create({
       data: {
         name: 'Három Királyfi, Három Királylány Mozgalom',
-        description: 'Stratégiai partnerünk — közös célunk a párkapcsolatok és a családok támogatása. Programjaikhoz a Kettesben közösség elérést biztosít.',
+        description: 'Stratégiai partnerünk — közös célunk a párkapcsolatok és a családok támogatása. Programjaikhoz a L’mur közösség elérést biztosít.',
         website: 'https://haromkiralyfi.hu',
         discountText: '10% kedvezmény a mozgalom páros programjaira',
         couponCode: 'KIRALYPAR10',
@@ -96,6 +96,7 @@ async function main() {
     seasonLabel?: string;
     seasonMonths?: string;
     tags?: string;
+    accessibility?: string;
     lat?: number;
     lng?: number;
     partnerId?: string;
@@ -142,6 +143,7 @@ async function main() {
       category: 'Otthoni',
       isLocationIndependent: true,
       tags: 'olcsó, esős napra',
+      accessibility: 'kerekesszek,latasserult,hallasserult,keves-seta',
     }),
     kavezoJatek: await mkIdea({
       title: 'Kávé + társasjáték a Zamatban',
@@ -151,6 +153,7 @@ async function main() {
       locationName: 'Budapest, Zamat Kávézó',
       lat: 47.4979, lng: 19.0552,
       tags: 'kávé, társasjáték',
+      accessibility: 'kerekesszek,babakocsi,keves-seta',
       partnerId: kavezo.id,
     }),
     margitsziget: await mkIdea({
@@ -161,6 +164,7 @@ async function main() {
       locationName: 'Budapest, Margitsziget',
       lat: 47.527, lng: 19.045,
       tags: 'ingyenes, piknik',
+      accessibility: 'kerekesszek,babakocsi,latasserult',
       isSeasonal: true,
       seasonLabel: 'májustól szeptemberig',
       seasonMonths: '5,6,7,8,9',
@@ -180,6 +184,7 @@ async function main() {
       locationName: 'Budapest, Szépművészeti Múzeum',
       lat: 47.516, lng: 19.077,
       tags: 'esős napra, múzeum',
+      accessibility: 'kerekesszek,babakocsi,hallasserult,keves-seta',
     }),
     csillagles: await mkIdea({
       title: 'Csillagles a fényszennyezéstől távol',
@@ -208,6 +213,7 @@ async function main() {
       locationName: 'Budapest, Széchenyi Gyógyfürdő',
       lat: 47.5186, lng: 19.082,
       tags: 'fürdő, téli',
+      accessibility: 'kerekesszek,keves-seta',
       isSeasonal: true,
       seasonLabel: 'novembertől februárig a leghangulatosabb',
       seasonMonths: '11,12,1,2',
@@ -227,6 +233,7 @@ async function main() {
       locationName: 'Budapest, Vörösmarty tér',
       lat: 47.496, lng: 19.051,
       tags: 'ünnepi, vásár',
+      accessibility: 'babakocsi,hallasserult',
       isSeasonal: true,
       seasonLabel: 'adventi időszak',
       seasonMonths: '12',
@@ -412,7 +419,7 @@ async function main() {
   });
 
   console.log('✔ Seed kész. Demó fiókok (jelszó: titok123!):');
-  console.log('  admin@kettesben.hu / mod@kettesben.hu / anna@example.com / bence@example.com / kata@example.com / partner@zamat.hu');
+  console.log('  admin@lmur.hu / mod@lmur.hu / anna@example.com / bence@example.com / kata@example.com / partner@zamat.hu');
 }
 
 main()

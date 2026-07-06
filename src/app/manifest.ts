@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Kettesben — randiötletek pároknak',
-    short_name: 'Kettesben',
+    name: 'L’mur — randiötletek pároknak',
+    short_name: 'L’mur',
     description:
       'Páros randiötlet-gyűjtemény és randinapló: inspiráció, bakancslisták, közös emlékek és partnerkedvezmények.',
     start_url: '/',

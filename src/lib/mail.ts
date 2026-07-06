@@ -31,7 +31,7 @@ export async function sendMail(opts: { to: string; subject: string; text: string
           : undefined,
       });
       await transport.sendMail({
-        from: process.env.SMTP_FROM ?? 'Kettesben <no-reply@kettesben.hu>',
+        from: process.env.SMTP_FROM ?? 'L’mur <no-reply@lmur.hu>',
         ...opts,
       });
       status = 'SENT';

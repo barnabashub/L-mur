@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin, requireModerator } from '@/lib/auth';
-import { CATEGORIES } from '@/lib/constants';
+import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
 import { normalizeTags, parseMonths } from '@/lib/discover';
 import { saveUpload } from '@/lib/uploads';
 import { appUrl, sendMail } from '@/lib/mail';
@@ -14,7 +14,7 @@ import {
   suspendedMail,
   warningMail,
 } from '@/lib/mail-templates';
-import { bool, failTo, okTo, str } from './helpers';
+import { bool, failTo, multi, okTo, str } from './helpers';
 
 const MOD = '/moderacio';
 
@@ -140,6 +140,7 @@ export async function editIdea(formData: FormData) {
       seasonLabel: data.isSeasonal ? data.seasonLabel ?? null : null,
       seasonMonths: data.isSeasonal && months.length ? months.join(',') : null,
       tags: normalizeTags(str(formData, 'tags')),
+      accessibility: multi(formData, 'accessibility', ACCESSIBILITY_OPTIONS.map((o) => o.key)),
       lat: data.isLocationIndependent ? null : lat,
       lng: data.isLocationIndependent ? null : lng,
       partnerId: data.partnerId || null,

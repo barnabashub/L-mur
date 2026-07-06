@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CATEGORIES } from '@/lib/constants';
+import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
 import { fetchApprovedIdeas, type IdeaFilter } from '@/lib/ideas';
 import { IdeaCard } from '@/components/IdeaCard';
 import { Flash } from '@/components/Flash';
@@ -15,6 +15,7 @@ export default async function IdeasPage({
     hely?: string;
     rendezes?: string;
     cimke?: string;
+    akadalymentes?: string;
     hiba?: string;
     uzenet?: string;
   }>;
@@ -23,6 +24,7 @@ export default async function IdeasPage({
   const filter: IdeaFilter = {
     q: sp.q,
     cimke: sp.cimke,
+    akadalymentes: sp.akadalymentes,
     category: sp.kategoria,
     hely: sp.hely === 'helyfuggetlen' || sp.hely === 'helyhez-kotott' ? sp.hely : undefined,
     rendezes:
@@ -49,7 +51,7 @@ export default async function IdeasPage({
         </p>
       )}
 
-      <form className="card mb-8 grid gap-3 p-4 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
+      <form className="card mb-8 grid gap-3 p-4 sm:grid-cols-[1fr_auto_auto_auto_auto_auto]" method="get">
         <input
           className="input"
           type="search"
@@ -67,6 +69,17 @@ export default async function IdeasPage({
           <option value="">Bármilyen helyszín</option>
           <option value="helyhez-kotott">Helyhez kötött</option>
           <option value="helyfuggetlen">Helyfüggetlen</option>
+        </select>
+        <select
+          className="input sm:w-52"
+          name="akadalymentes"
+          defaultValue={sp.akadalymentes ?? ''}
+          aria-label="Szűrés akadálymentesség szerint"
+        >
+          <option value="">Akadálymentesség: mind</option>
+          {ACCESSIBILITY_OPTIONS.map((o) => (
+            <option key={o.key} value={o.key}>{o.emoji} {o.label}</option>
+          ))}
         </select>
         <select className="input sm:w-44" name="rendezes" defaultValue={sp.rendezes ?? 'legujabb'}>
           <option value="legujabb">Legújabb elöl</option>

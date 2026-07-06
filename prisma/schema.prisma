@@ -1,4 +1,4 @@
-// Kettesben — adatmodell
+// L’mur — adatmodell
 // SQLite-on futunk (a Prisma SQLite-on nem támogat enumot, ezért a
 // felsorolás-jellegű mezők String típusúak; az érvényes értékeket a
 // src/lib/constants.ts rögzíti és a Zod sémák kényszerítik ki).
@@ -101,6 +101,8 @@ model DateIdea {
   seasonMonths          String?
   // Címkék vesszővel elválasztva (pl. "ingyenes, kutyabarát").
   tags                  String?
+  // Akadálymentességi jelölők kulcsai vesszővel (l. ACCESSIBILITY_OPTIONS).
+  accessibility         String?
   // Térképnézethez (helyhez kötött ötleteknél).
   lat                   Float?
   lng                   Float?

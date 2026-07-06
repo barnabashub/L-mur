@@ -1,4 +1,7 @@
-# Kettesben — páros randiötlet-gyűjtemény és randinapló
+# L’mur — páros randiötlet-gyűjtemény és randinapló
+
+> A név a **lemur** és az **amor** szavak keveréke (ejtsd: „lamúr"); a logó két
+> gyűrűsfarkú lemur farka, amelyek pontatlan szívet formálnak.
 
 > Rendszerterv és termékspecifikáció — v1.0
 > Az eredeti ötletjegyzet feldolgozása, professzionális kiegészítésekkel és bővített scope-pal.
@@ -7,7 +10,7 @@
 
 ## 1. Vízió és célok
 
-A **Kettesben** egy webalkalmazás, amely pároknak segít minőségi együtt töltött időt tervezni és megélni:
+A **L’mur** egy webalkalmazás, amely pároknak segít minőségi együtt töltött időt tervezni és megélni:
 
 - **Inspiráció**: gondozott randiötlet-gyűjtemény — szép helyek, események, és helytől független ötletek.
 - **Bakancslista**: „gyári" (szerkesztett) és saját listák, amelyekben a pár pipálja a teljesített randikat.
@@ -169,7 +172,7 @@ cserélhető), „ötlet a mai napra" determinisztikus napi ajánló a főoldalo
 szezonális kiemelés (`seasonMonths` hónaplista alapján az épp aktuális ötletek).
 A többnyelvűség (EN) későbbre halasztva.
 **Fázis 4 — partnerprogram:** ✅ **megvalósítva** — egyedi, beváltás-követett kuponkódok
-(a felhasználó az ötlet oldalán kér KET-XXXX kódot, a profilján is látja), PARTNER
+(a felhasználó az ötlet oldalán kér LEM-XXXX kódot, a profilján is látja), PARTNER
 szerepkör + partner önkiszolgáló felület (`/partner`): kód beváltása a helyszínen,
 kiadott/beváltott statisztika, ötletenkénti bontás. A Három Királyfi mozgalom közös
 kampányai szervezési (nem fejlesztési) feladat.
@@ -182,7 +185,7 @@ kampányai szervezési (nem fejlesztési) feladat.
 - **Expo (React Native) alkalmazás** (`mobile/`): egy kódbázis iPhone-ra és Androidra;
   öt fül (Ötletek, Listák, Naplónk, Értesítések, Profil) + ötlet- és listaképernyők,
   kipipálás fotóval (expo-image-picker), token az expo-secure-store-ban, áruházi
-  azonosítók beállítva (`hu.kettesben.app`), kiadás EAS Builddel.
+  azonosítók beállítva (`hu.lmur.app`), kiadás EAS Builddel.
 - **PWA**: a webapp telepíthető kezdőképernyőre (manifest + ikonok, standalone mód).
 
 **Fázis 5 — üzemeltetés:** ✅ **megvalósítva** —
@@ -198,6 +201,17 @@ kampányai szervezési (nem fejlesztési) feladat.
   javaslatok, mentés/visszaállítás, skálázási útmutató, verziófrissítés, incidens-runbook.
 Infrastruktúra-függő továbblépések dokumentálva: PostgreSQL + S3 + Redis átállás
 (mindhárom modul cserére előkészítve), CDN, web push.
+
+**Akadálymentesség:** ✅ **megvalósítva** —
+- szabványos akadálymentességi gomb (♿) a fejlécben: nagyobb betűméret (~125%),
+  magas kontrasztú mód (WCAG-barát szín-párok, aláhúzott linkek), kevesebb mozgás;
+  a beállítások a localStorage-ban megmaradnak, villanás nélkül állnak vissza,
+- „ugrás a tartalomra" link, látható billentyűzet-fókusz (:focus-visible), ARIA-címkék,
+- **akadálymentességi jelölők a programokon** (strukturáltan): ♿ kerekesszékkel
+  megközelíthető, 🦯 látássérült-barát, 🦻 hallássérült-barát, 👶 babakocsival járható,
+  🪑 kevés sétával teljesíthető — beküldéskor/szerkesztéskor pipálható, a kártyákon és
+  az ötletoldalon jelvényként látszik, a böngészőben és a REST API-ban szűrhető,
+- mobil: accessibilityLabel/role a vezérlőkön, a rendszer betűméret-skálázását követi.
 
 **Arculat (v2):** merész lila–fukszia paletta lime kiemelésekkel (a korábbi piros
 lecserélve), token-alapú design-rendszer, teljes dark mode (weben váltógomb +

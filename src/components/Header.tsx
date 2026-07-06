@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 import { logout } from '@/lib/actions/auth';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { AccessibilityMenu } from './AccessibilityMenu';
 
 export async function Header() {
   const user = await getCurrentUser();
@@ -18,7 +19,7 @@ export async function Header() {
         <Link href="/" className="flex items-center gap-2">
           <Logo className="h-9 w-9" />
           <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-lg font-extrabold tracking-tight text-transparent dark:from-violet-400 dark:to-fuchsia-400">
-            Kettesben
+            L’mur
           </span>
         </Link>
         <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-semibold text-mute">
@@ -44,6 +45,7 @@ export async function Header() {
           )}
         </nav>
         <div className="ml-auto flex items-center gap-1 text-sm">
+          <AccessibilityMenu />
           <ThemeToggle />
           {user ? (
             <>
@@ -51,6 +53,7 @@ export async function Header() {
                 href="/ertesitesek"
                 className="relative rounded-2xl p-2 text-mute hover:bg-soft"
                 title="Értesítések"
+                aria-label={unread > 0 ? `Értesítések — ${unread} olvasatlan` : 'Értesítések'}
               >
                 🔔
                 {unread > 0 && (

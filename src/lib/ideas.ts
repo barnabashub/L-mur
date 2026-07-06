@@ -14,6 +14,7 @@ export type IdeaFilter = {
   hely?: 'helyfuggetlen' | 'helyhez-kotott';
   rendezes?: 'ertekeles' | 'nepszeru' | 'legujabb';
   cimke?: string;
+  akadalymentes?: string;
 };
 
 /** Jóváhagyott ötletek szűrve, statisztikákkal, rendezve. */
@@ -51,6 +52,10 @@ export async function fetchApprovedIdeas(filter: IdeaFilter) {
   if (filter.cimke) {
     const wanted = filter.cimke.toLowerCase();
     withStats = withStats.filter((i) => parseTags(i.tags).includes(wanted));
+  }
+  if (filter.akadalymentes) {
+    const wanted = filter.akadalymentes;
+    withStats = withStats.filter((i) => parseTags(i.accessibility).includes(wanted));
   }
 
   if (filter.rendezes === 'ertekeles') {

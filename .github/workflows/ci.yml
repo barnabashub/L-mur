@@ -54,4 +54,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Image build (a Dockerfile validálása)
-        run: docker build -t kettesben:ci .
+        run: docker build -t lmur:ci .

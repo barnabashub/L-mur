@@ -6,8 +6,8 @@ import { db } from '@/lib/db';
 import { requireUser } from '@/lib/auth';
 import { isModerator } from '@/lib/permissions';
 import { saveUpload } from '@/lib/uploads';
-import { CATEGORIES } from '@/lib/constants';
-import { bool, failTo, okTo, str } from './helpers';
+import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
+import { bool, failTo, multi, okTo, str } from './helpers';
 
 const ideaSchema = z.object({
   title: z.string().min(3, 'A cím legalább 3 karakter legyen.').max(120),
@@ -51,6 +51,7 @@ export async function submitIdea(formData: FormData) {
       locationName: data.isLocationIndependent ? null : data.locationName,
       seasonLabel: data.isSeasonal ? data.seasonLabel : null,
       imagePath,
+      accessibility: multi(formData, 'accessibility', ACCESSIBILITY_OPTIONS.map((o) => o.key)),
       submitterId: user.id,
       status: autoApprove ? 'APPROVED' : 'PENDING',
     },

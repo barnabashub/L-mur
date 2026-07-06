@@ -12,7 +12,7 @@ import { db } from './db';
 const secret = new TextEncoder().encode(
   process.env.SESSION_SECRET ?? 'fejlesztesi-titok-csereld-le-prodban'
 );
-const AUDIENCE = 'kettesben-api';
+const AUDIENCE = 'lmur-api';
 const TOKEN_DAYS = 30;
 
 export async function createApiToken(userId: string): Promise<string> {

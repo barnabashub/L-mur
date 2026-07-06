@@ -1,5 +1,5 @@
 /**
- * Kettesben mobil — témák. A rendszer világos/sötét beállítását követi.
+ * L’mur mobil — témák. A rendszer világos/sötét beállítását követi.
  * A palettát a ThemeProvider osztja szét kontextusban, így az egész fa
  * garantáltan ugyanazt a témát látja (weben a matchMedia-t figyeljük
  * közvetlenül, mert a react-native-web useColorScheme statikus exportban

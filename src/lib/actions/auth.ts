@@ -41,7 +41,7 @@ export async function register(formData: FormData) {
   const token = await issueToken(user.id, 'EMAIL_VERIFY');
   await sendMail({ to: email, ...verifyEmailMail(name, appUrl(`/email-megerosites/${token}`)) });
   await createSession(user.id);
-  okTo('/', 'Sikeres regisztráció — üdvözlünk a Kettesben-ben! Megerősítő e-mailt küldtünk.');
+  okTo('/', 'Sikeres regisztráció — üdvözlünk a L’murnál! Megerősítő e-mailt küldtünk.');
 }
 
 export async function resendVerification() {

@@ -22,3 +22,9 @@ export function str(fd: FormData, key: string): string {
 export function bool(fd: FormData, key: string): boolean {
   return fd.get(key) === 'on' || fd.get(key) === 'true';
 }
+
+/** Több azonos nevű checkbox értékei, engedélyezett kulcsokra szűrve. */
+export function multi(fd: FormData, key: string, allowed: readonly string[]): string | null {
+  const values = fd.getAll(key).filter((v): v is string => typeof v === 'string' && allowed.includes(v));
+  return values.length ? values.join(',') : null;
+}

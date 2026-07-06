@@ -33,9 +33,9 @@ export async function deleteAccount(formData: FormData) {
 
   // Jóváhagyott ötletek átadása a rendszer-fióknak.
   const ghost = await db.user.upsert({
-    where: { email: 'torolt@kettesben.hu' },
+    where: { email: 'torolt@lmur.hu' },
     create: {
-      email: 'torolt@kettesben.hu',
+      email: 'torolt@lmur.hu',
       name: 'Törölt felhasználó',
       passwordHash: await bcrypt.hash(crypto.randomUUID(), 10),
       status: 'SUSPENDED',

@@ -40,6 +40,9 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: !!(disabled || loading), busy: !!loading }}
       style={({ pressed }) => [
         styles.btn,
         { backgroundColor: bg },
@@ -112,7 +115,14 @@ export function StarPicker({ value, onChange }: { value: number; onChange: (n: n
   return (
     <View style={{ flexDirection: 'row', gap: spacing.s }}>
       {[1, 2, 3, 4, 5].map((n) => (
-        <Pressable key={n} onPress={() => onChange(n)} hitSlop={6}>
+        <Pressable
+          key={n}
+          onPress={() => onChange(n)}
+          hitSlop={6}
+          accessibilityRole="button"
+          accessibilityLabel={`${n} csillag`}
+          accessibilityState={{ selected: n <= value }}
+        >
           <Text style={{ fontSize: 30, color: n <= value ? t.star : t.border }}>★</Text>
         </Pressable>
       ))}

@@ -2,18 +2,18 @@
 
 type Mail = { subject: string; text: string };
 
-const signature = '\n\nSzeretettel,\na Kettesben csapata 💛';
+const signature = '\n\nSzeretettel,\na L’mur csapata 💛';
 
 export function verifyEmailMail(name: string, link: string): Mail {
   return {
-    subject: 'Erősítsd meg az e-mail címedet — Kettesben',
-    text: `Szia ${name}!\n\nÜdvözlünk a Kettesben-ben! Kérjük, erősítsd meg az e-mail címedet az alábbi linkre kattintva (a link 24 óráig érvényes):\n\n${link}\n\nHa nem te regisztráltál, hagyd figyelmen kívül ezt a levelet.${signature}`,
+    subject: 'Erősítsd meg az e-mail címedet — L’mur',
+    text: `Szia ${name}!\n\nÜdvözlünk a L’murnál! Kérjük, erősítsd meg az e-mail címedet az alábbi linkre kattintva (a link 24 óráig érvényes):\n\n${link}\n\nHa nem te regisztráltál, hagyd figyelmen kívül ezt a levelet.${signature}`,
   };
 }
 
 export function passwordResetMail(name: string, link: string): Mail {
   return {
-    subject: 'Jelszó-visszaállítás — Kettesben',
+    subject: 'Jelszó-visszaállítás — L’mur',
     text: `Szia ${name}!\n\nJelszó-visszaállítást kértél. Új jelszót az alábbi linken adhatsz meg (a link 1 óráig érvényes, és csak egyszer használható):\n\n${link}\n\nHa nem te kérted, nincs teendőd — a jelszavad változatlan.${signature}`,
   };
 }
@@ -34,21 +34,21 @@ export function ideaRejectedMail(name: string, ideaTitle: string, reason: string
 
 export function warningMail(name: string, message: string): Mail {
   return {
-    subject: 'Moderátori figyelmeztetés — Kettesben',
+    subject: 'Moderátori figyelmeztetés — L’mur',
     text: `Szia ${name}!\n\nModerátori figyelmeztetést kaptál:\n\n${message}\n\nKérjük, tartsd be a közösségi irányelveinket.${signature}`,
   };
 }
 
 export function suspendedMail(name: string, message: string): Mail {
   return {
-    subject: 'A fiókodat felfüggesztettük — Kettesben',
+    subject: 'A fiókodat felfüggesztettük — L’mur',
     text: `Szia ${name}!\n\nA fiókodat felfüggesztettük.\n\nIndoklás: ${message}\n\nHa úgy gondolod, tévedés történt, válaszolj erre a levélre.${signature}`,
   };
 }
 
 export function coupleJoinedMail(name: string, partnerName: string, link: string): Mail {
   return {
-    subject: `${partnerName} összekapcsolódott veled — Kettesben`,
+    subject: `${partnerName} összekapcsolódott veled — L’mur`,
     text: `Szia ${name}!\n\n${partnerName} beváltotta a meghívókódodat — mostantól közös a randinaplótok, a fontos dátumaitok és a bakancslista-haladásotok!\n\n${link}${signature}`,
   };
 }

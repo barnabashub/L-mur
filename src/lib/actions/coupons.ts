@@ -10,7 +10,7 @@ function makeCouponCode(): string {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const part = () =>
     Array.from(crypto.randomBytes(4), (b) => alphabet[b % alphabet.length]).join('');
-  return `KET-${part()}`;
+  return `LEM-${part()}`;
 }
 
 /** Egyedi, beváltás-követett kuponkód kérése egy partneres ötlethez. */

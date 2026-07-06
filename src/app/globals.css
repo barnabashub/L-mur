@@ -32,6 +32,66 @@
   body {
     @apply bg-page text-ink antialiased;
   }
+
+  /* Jól látható billentyűzet-fókusz mindenhol. */
+  :focus-visible {
+    outline: 3px solid rgb(var(--brand));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* --- Akadálymentességi módok (♿ gomb a fejlécben) --- */
+
+  /* Nagyobb betűméret: minden rem-alapú méret együtt skálázódik. */
+  html.a11y-betu {
+    font-size: 20px;
+  }
+
+  /* Magas kontraszt: erős szín-párok, aláhúzott linkek. */
+  html.a11y-kontraszt {
+    --bg: 255 255 255;
+    --card: 255 255 255;
+    --soft: 235 235 235;
+    --edge: 0 0 0;
+    --ink: 0 0 0;
+    --mute: 40 40 40;
+    --faint: 60 60 60;
+    --brand: 76 29 149;
+    --brand-strong: 55 20 110;
+    --brand-soft: 221 214 254;
+  }
+  html.a11y-kontraszt.dark {
+    --bg: 0 0 0;
+    --card: 10 10 10;
+    --soft: 35 35 35;
+    --edge: 255 255 255;
+    --ink: 255 255 255;
+    --mute: 220 220 220;
+    --faint: 200 200 200;
+    --brand: 216 180 254;
+    --brand-strong: 233 213 255;
+    --brand-soft: 60 30 110;
+  }
+  html.a11y-kontraszt main a,
+  html.a11y-kontraszt footer a {
+    text-decoration: underline;
+  }
+  html.a11y-kontraszt .btn-primary {
+    background-image: none;
+    background-color: rgb(var(--brand));
+    box-shadow: none;
+  }
+  html.a11y-kontraszt.dark .btn-primary {
+    color: #000;
+  }
+
+  /* Kevesebb mozgás: animációk és áttűnések ki. */
+  html.a11y-nyugodt *,
+  html.a11y-nyugodt *::before,
+  html.a11y-nyugodt *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 @layer components {
@@ -95,5 +155,12 @@
   }
   .flash-err {
     @apply rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-300;
+  }
+}
+
+@layer components {
+  /* "Ugrás a tartalomra" link — csak fókuszban látszik. */
+  .skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded-2xl bg-brand px-4 py-2 font-bold text-white transition focus:translate-y-0;
   }
 }

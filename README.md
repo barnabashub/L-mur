@@ -1,4 +1,6 @@
-# 💜 Kettesben
+# L’mur
+
+> A név a **lemur** és az **amor** szavak keveréke — ejtsd: „lamúr". 🐒💜
 
 **Páros randiötlet-gyűjtemény és randinapló** — inspiráció, bakancslisták, közös emlékek és
 partnerkedvezmények minden korosztályú párnak. Nem csak az összejövést segíti, az együtt
@@ -24,6 +26,11 @@ A logó két gyűrűsfarkú **lemur farka**, amelyek egy pontatlan szívet form�
 - 🛡️ **Moderátori felület** — javaslatok elbírálása, moderációs kérések, ötletszerkesztés, felhasználók figyelmeztetése/felfüggesztése, audit napló
 - 🎟️ **Partnerkedvezmények** — kuponkódok bejelentkezett felhasználóknak (pl. vár, nemzeti park, kávézó)
 - 🔔 **Értesítési központ** — moderációs döntések, figyelmeztetések, párkapcsolódás
+- ♿ **Akadálymentesség** — szabványos akadálymentességi gomb a fejlécben (nagyobb betű,
+  magas kontraszt, kevesebb mozgás — a böngésző megjegyzi); „ugrás a tartalomra" link,
+  látható billentyűzet-fókusz; a programok akadálymentességi jelölőkkel címkézhetők
+  (♿ kerekesszék, 🦯 látássérült, 🦻 hallássérült, 👶 babakocsi, 🪑 kevés séta) és
+  ezekre szűrhetők a böngészőben és az API-ban is
 - ✉️ **E-mailek** — megerősítő és jelszó-visszaállító levelek, értesítő e-mailek a moderációs
   döntésekről; SMTP nélkül minden levél a moderációs felület „E-mail napló" fülén olvasható
 - 🔑 **Jelszó-visszaállítás és e-mail-megerősítés** — egyszer használatos, hashelve tárolt, lejáró tokenekkel
@@ -54,8 +61,8 @@ npm run dev       # http://localhost:3000
 
 | E-mail | Szerep |
 |---|---|
-| `admin@kettesben.hu` | admin |
-| `mod@kettesben.hu` | moderátor |
+| `admin@lmur.hu` | admin |
+| `mod@lmur.hu` | moderátor |
 | `anna@example.com` | felhasználó — Bencével párban |
 | `bence@example.com` | felhasználó — Annával párban |
 | `kata@example.com` | felhasználó — pár nélkül |

@@ -1,4 +1,4 @@
-# Kettesben — üzemeltetési összeállítás.
+# L’mur — üzemeltetési összeállítás.
 # Indítás:  docker compose up -d --build
 # Első indításhoz demó-adatokkal:  SEED_DEMO=1 docker compose up -d --build
 services:
@@ -7,7 +7,7 @@ services:
     ports:
       - '3000:3000'
     environment:
-      DATABASE_URL: 'file:/data/kettesben.db'
+      DATABASE_URL: 'file:/data/lmur.db'
       SESSION_SECRET: '${SESSION_SECRET:?Állítsd be a SESSION_SECRET-et (.env)}'
       APP_URL: '${APP_URL:-http://localhost:3000}'
       CRON_SECRET: '${CRON_SECRET:?Állítsd be a CRON_SECRET-et (.env)}'
@@ -16,7 +16,7 @@ services:
       SMTP_PORT: '${SMTP_PORT:-587}'
       SMTP_USER: '${SMTP_USER:-}'
       SMTP_PASS: '${SMTP_PASS:-}'
-      SMTP_FROM: '${SMTP_FROM:-Kettesben <no-reply@kettesben.hu>}'
+      SMTP_FROM: '${SMTP_FROM:-L’mur <no-reply@lmur.hu>}'
       SEED_DEMO: '${SEED_DEMO:-0}'
     volumes:
       - ./data:/data
@@ -38,14 +38,14 @@ services:
 
 # PostgreSQL-re váltáshoz (ajánlott nagyobb terhelésnél):
 #   1. prisma/schema.prisma: provider = "postgresql"
-#   2. DATABASE_URL: postgresql://kettesben:titok@db:5432/kettesben
+#   2. DATABASE_URL: postgresql://lmur:titok@db:5432/lmur
 #   3. Komment ki:
 #  db:
 #    image: postgres:16-alpine
 #    environment:
-#      POSTGRES_USER: kettesben
+#      POSTGRES_USER: lmur
 #      POSTGRES_PASSWORD: titok
-#      POSTGRES_DB: kettesben
+#      POSTGRES_DB: lmur
 #    volumes:
 #      - pgdata:/var/lib/postgresql/data
 #    restart: unless-stopped
