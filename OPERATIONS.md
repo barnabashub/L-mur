@@ -38,6 +38,7 @@ npx next start -p 3000     # PM2: pm2 start "npx next start -p 3000" --name lmur
 | `APP_URL` | ✔ | publikus URL — az e-mailekben lévő linkekhez |
 | `SMTP_HOST/PORT/USER/PASS/FROM` | – | e-mail küldés; enélkül a levelek csak az adatbázisba naplózódnak (moderációs felület → E-mail napló) |
 | `METRICS_TOKEN` | – | ha be van állítva, a `/api/metrics` csak ezzel a Bearer tokennel érhető el |
+| `GEOCODER_URL` | – | helykereső (Nominatim-kompatibilis) címe; alapértelmezés a nyilvános OSM Nominatim |
 | `SEED_DEMO` | – | `1` esetén induláskor demó-adatok töltődnek be (prodban SOHA) |
 | `PORT` | – | alapértelmezés: 3000 |
 
@@ -98,6 +99,8 @@ add meg. A szerveroldali hibák (server actionök, API route-ok) automatikusan b
 | Képtár | lokális `public/uploads` | S3-kompatibilis tár — egyetlen modul cseréje: `src/lib/uploads.ts` |
 | Rate limit | folyamaton belüli (fix ablak) | Redis-alapú — a `src/lib/rate-limit.ts` felülete változatlan maradhat |
 | E-mail | SMTP (nodemailer) | tranzakciós szolgáltató (Resend/Postmark/SES) — `src/lib/mail.ts` |
+| Geokódolás | nyilvános OSM Nominatim (1 kérés/mp, szerveroldali cache) | saját Nominatim/Photon konténer — csak a `GEOCODER_URL` cseréje |
+| Térképcsempék | nyilvános OSM csempeszerver | saját/fizetős csempeszolgáltató, ha a forgalom átlépi az OSM méltányos használati küszöbét (a csempe-URL a `src/components/MapView.tsx`-ben egy sor) |
 | Több példány | 1 konténer | LB mögött több példány: ehhez Postgres + S3 + Redis szükséges (a lokális fájl-állapot miatt) |
 
 ## 6. Verziófrissítés menete

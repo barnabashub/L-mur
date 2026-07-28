@@ -1,5 +1,6 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
+import { isValidLatLng } from '@/lib/geocode-utils';
 
 /** Hibaüzenettel visszairányít az űrlap oldalára (?hiba=...). */
 export function failTo(path: string, message: string): never {
@@ -27,4 +28,16 @@ export function bool(fd: FormData, key: string): boolean {
 export function multi(fd: FormData, key: string, allowed: readonly string[]): string | null {
   const values = fd.getAll(key).filter((v): v is string => typeof v === 'string' && allowed.includes(v));
   return values.length ? values.join(',') : null;
+}
+
+/**
+ * A helyválasztó rejtett lat/lng mezői. Üres → null (a helyszín név
+ * önmagában is elég); érvénytelen érték → hiba a hívónak.
+ */
+export function coords(fd: FormData): { lat: number | null; lng: number | null; ok: boolean } {
+  const lat = str(fd, 'lat');
+  const lng = str(fd, 'lng');
+  if (!lat || !lng) return { lat: null, lng: null, ok: true };
+  if (!isValidLatLng(lat, lng)) return { lat: null, lng: null, ok: false };
+  return { lat: Number(lat), lng: Number(lng), ok: true };
 }

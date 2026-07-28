@@ -34,6 +34,8 @@ export async function GET(req: Request) {
       completionCount: i.completionCount,
       hasDiscount: !!i.partner,
       accessibility: parseTags(i.accessibility),
+      lat: i.lat,
+      lng: i.lng,
     }))
   );
 }

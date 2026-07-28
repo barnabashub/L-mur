@@ -1,4 +1,5 @@
 import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
+import { LocationPicker } from './LocationPicker';
 
 type Defaults = {
   title?: string;
@@ -9,6 +10,8 @@ type Defaults = {
   isLocationIndependent?: boolean;
   isSeasonal?: boolean;
   seasonLabel?: string | null;
+  lat?: number | null;
+  lng?: number | null;
 };
 
 /** Közös űrlapmezők ötlet beküldéséhez és moderátori szerkesztéséhez. */
@@ -26,27 +29,21 @@ export function IdeaFormFields({ defaults = {} }: { defaults?: Defaults }) {
           defaultValue={defaults.description ?? ''}
           placeholder="Mitől különleges? Mire érdemes figyelni? Mennyibe kerül nagyjából?" />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="label" htmlFor="category">Kategória</label>
-          <select className="input" id="category" name="category" required defaultValue={defaults.category ?? ''}>
-            <option value="" disabled>Válassz…</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="label" htmlFor="locationName">Helyszín</label>
-          <input className="input" id="locationName" name="locationName" maxLength={160}
-            defaultValue={defaults.locationName ?? ''} placeholder="pl. Budapest, Halászbástya" />
-        </div>
+      <div>
+        <label className="label" htmlFor="category">Kategória</label>
+        <select className="input sm:max-w-xs" id="category" name="category" required defaultValue={defaults.category ?? ''}>
+          <option value="" disabled>Válassz…</option>
+          {CATEGORIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
-      <label className="flex items-center gap-2 text-sm text-ink/90">
-        <input type="checkbox" name="isLocationIndependent" className="accent-violet-500"
-          defaultChecked={defaults.isLocationIndependent ?? false} />
-        Helyfüggetlen ötlet (bárhol megvalósítható)
-      </label>
+      <LocationPicker
+        defaultLocationName={defaults.locationName}
+        defaultLat={defaults.lat}
+        defaultLng={defaults.lng}
+        defaultLocationIndependent={defaults.isLocationIndependent}
+      />
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex items-center gap-2 text-sm text-ink/90">
           <input type="checkbox" name="isSeasonal" className="accent-violet-500"

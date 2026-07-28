@@ -159,8 +159,53 @@
 }
 
 @layer components {
-  /* "Ugrás a tartalomra" link — csak fókuszban látszik. */
+  /* "Ugrás a tartalomra" link — képernyőolvasónak mindig, szemnek csak fókuszban. */
   .skip-link {
-    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded-2xl bg-brand px-4 py-2 font-bold text-white transition focus:translate-y-0;
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded-2xl bg-brand px-4 py-2 font-bold text-white shadow-lg;
+  }
+}
+
+@layer components {
+  /* --- Leaflet térkép: márka-marker és téma-illesztés --- */
+  .lmur-pin {
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgb(var(--brand));
+    border: 3px solid rgb(var(--card));
+    box-shadow: 0 0 0 2px rgb(var(--brand) / 0.35), 0 2px 6px rgb(0 0 0 / 0.3);
+  }
+  .lmur-map .leaflet-container {
+    background: rgb(var(--soft));
+    font: inherit;
+  }
+  .lmur-map .leaflet-popup-content-wrapper,
+  .lmur-map .leaflet-popup-tip {
+    background: rgb(var(--card));
+    color: rgb(var(--ink));
+    border-radius: 14px;
+  }
+  .lmur-map .leaflet-popup-content a {
+    color: rgb(var(--brand));
+  }
+  .lmur-map .leaflet-bar a {
+    background: rgb(var(--card));
+    color: rgb(var(--ink));
+    border-color: rgb(var(--edge));
+  }
+  .lmur-map .leaflet-control-attribution {
+    background: rgb(var(--card) / 0.85);
+    color: rgb(var(--mute));
+  }
+  .lmur-map .leaflet-control-attribution a {
+    color: rgb(var(--brand));
+  }
+  /* Sötét módban a világos csempéket tompítjuk (a felirat így is olvasható marad). */
+  .dark .lmur-map .leaflet-tile-pane {
+    filter: brightness(0.75) saturate(0.85) contrast(1.05);
   }
 }

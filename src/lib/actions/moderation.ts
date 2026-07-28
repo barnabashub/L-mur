@@ -14,7 +14,7 @@ import {
   suspendedMail,
   warningMail,
 } from '@/lib/mail-templates';
-import { bool, failTo, multi, okTo, str } from './helpers';
+import { bool, coords, failTo, multi, okTo, str } from './helpers';
 
 const MOD = '/moderacio';
 
@@ -118,14 +118,8 @@ export async function editIdea(formData: FormData) {
     failTo(back, (e as Error).message);
   }
 
-  const latRaw = str(formData, 'lat');
-  const lngRaw = str(formData, 'lng');
-  const lat = latRaw ? Number(latRaw) : null;
-  const lng = lngRaw ? Number(lngRaw) : null;
-  if ((lat !== null && (isNaN(lat) || lat < -90 || lat > 90)) ||
-      (lng !== null && (isNaN(lng) || lng < -180 || lng > 180))) {
-    failTo(back, 'Érvénytelen koordináták.');
-  }
+  const point = coords(formData);
+  if (!point.ok) failTo(back, 'Érvénytelen helyszín — válassz pontot a térképen.');
   const months = parseMonths(str(formData, 'seasonMonths'));
 
   await db.dateIdea.update({
@@ -141,8 +135,8 @@ export async function editIdea(formData: FormData) {
       seasonMonths: data.isSeasonal && months.length ? months.join(',') : null,
       tags: normalizeTags(str(formData, 'tags')),
       accessibility: multi(formData, 'accessibility', ACCESSIBILITY_OPTIONS.map((o) => o.key)),
-      lat: data.isLocationIndependent ? null : lat,
-      lng: data.isLocationIndependent ? null : lng,
+      lat: data.isLocationIndependent ? null : point.lat,
+      lng: data.isLocationIndependent ? null : point.lng,
       partnerId: data.partnerId || null,
       imagePath,
     },

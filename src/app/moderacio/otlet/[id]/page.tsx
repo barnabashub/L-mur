@@ -45,18 +45,6 @@ export default async function EditIdeaPage({
               pattern="^\s*\d{1,2}(\s*,\s*\d{1,2})*\s*$" placeholder="üres = egész évben" />
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="label" htmlFor="lat">Szélesség (lat) — térképhez</label>
-            <input className="input" id="lat" name="lat" type="number" step="any" min="-90" max="90"
-              defaultValue={idea.lat ?? ''} placeholder="pl. 47.5022" />
-          </div>
-          <div>
-            <label className="label" htmlFor="lng">Hosszúság (lng)</label>
-            <input className="input" id="lng" name="lng" type="number" step="any" min="-180" max="180"
-              defaultValue={idea.lng ?? ''} placeholder="pl. 19.0344" />
-          </div>
-        </div>
         <div>
           <label className="label" htmlFor="partnerId">Kedvezménypartner</label>
           <select className="input" id="partnerId" name="partnerId" defaultValue={idea.partnerId ?? ''}>

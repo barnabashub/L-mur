@@ -36,6 +36,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     isSeasonal: idea.isSeasonal,
     seasonLabel: idea.seasonLabel,
     accessibility: parseTags(idea.accessibility),
+    lat: idea.lat,
+    lng: idea.lng,
     submitterName: idea.submitter.name,
     createdAt: idea.createdAt,
     updatedAt: idea.updatedAt,

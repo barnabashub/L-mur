@@ -39,7 +39,10 @@ A logó két gyűrűsfarkú **lemur farka**, amelyek egy pontatlan szívet form�
 - 📱 **Mobil alkalmazás (iOS + Android)** — Expo/React Native kliens a `mobile/` mappában, saját
   REST API-val (`/api/v1/*`, Bearer token); részletek: [mobile/README.md](./mobile/README.md)
 - 🏠 **PWA** — a webapp kezdőképernyőre telepíthető (manifest + ikonok)
-- 🗺️ **Térképnézet** — helyhez kötött ötletek stilizált országtérképen (`/terkep`)
+- 🗺️ **Valódi térképek (OpenStreetMap + Leaflet)** — minden térképes nézet mögött igazi
+  térkép: az ötlettérkép (`/terkep`), az ötletoldal helyszíntérképe útvonaltervezés-gombbal,
+  és a mobilapp is. **Helyszín megadása kereséssel**: a beküldő rákeres a helyre
+  (pl. „Zamat kávézó Budapest") vagy a térképre kattint — koordinátát senkinek nem kell írnia
 - 🔍 **Felfedezés** — „ötlet a mai napra" napi ajánló, szezonális főoldali kiemelések,
   kattintható #címkék az ötleteken
 - 🎫 **Partnerprogram** — egyedi, beváltás-követett kuponkódok; partner önkiszolgáló felület
@@ -78,6 +81,7 @@ npm run dev       # http://localhost:3000
 | `npm run test:e2e` | böngészős füstteszt (playwright-core; futó szerver + friss seed kell hozzá) |
 | `node e2e/phase2.mjs` | böngészős teszt a kommunikációs folyamatokra (megerősítés, jelszóreset, cron) |
 | `bash e2e/api-test.sh` | a REST API (v1) end-to-end tesztje (27 ellenőrzés) |
+| `node e2e/map.mjs` | térkép és helyválasztó teszt (valódi OSM + geokódolás) |
 | `npm run db:push` | Prisma séma szinkronizálása az adatbázisba |
 | `npm run db:seed` | demó-adatok újratöltése |
 
@@ -92,6 +96,10 @@ npm run dev       # http://localhost:3000
 - Képfeltöltés izolált modulban (`src/lib/uploads.ts`) — prodban S3-adapterre cserélhető
 - **Levelezés** izolált modulban (`src/lib/mail.ts`): az `SMTP_*` env-változókkal nodemailer
   küld; enélkül a levelek az `EmailLog` táblába kerülnek, és a moderációs felületen olvashatók
+- **Térkép és geokódolás**: Leaflet + OpenStreetMap csempék (API-kulcs nélkül); a helykeresést
+  a saját szerverünk proxyzza (`/api/geocode` → Nominatim) — így betartható az 1 kérés/mp-es
+  szabály, van cache, és a felhasználók IP-je sem kerül ki. Saját geokódoló a `GEOCODER_URL`
+  env-változóval köthető be
 - **Tokenek** (`src/lib/token-utils.ts` + `tokens.ts`): a nyers token csak az e-mailben utazik,
   az adatbázis SHA-256 hash-t tárol; egyszer használatos, lejáró, típushoz kötött
 

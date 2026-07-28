@@ -7,7 +7,7 @@ import { requireUser } from '@/lib/auth';
 import { isModerator } from '@/lib/permissions';
 import { saveUpload } from '@/lib/uploads';
 import { ACCESSIBILITY_OPTIONS, CATEGORIES } from '@/lib/constants';
-import { bool, failTo, multi, okTo, str } from './helpers';
+import { bool, coords, failTo, multi, okTo, str } from './helpers';
 
 const ideaSchema = z.object({
   title: z.string().min(3, 'A cím legalább 3 karakter legyen.').max(120),
@@ -36,6 +36,9 @@ export async function submitIdea(formData: FormData) {
     failTo('/otletek/uj', 'Add meg a helyszínt, vagy jelöld helyfüggetlennek.');
   }
 
+  const point = coords(formData);
+  if (!point.ok) failTo('/otletek/uj', 'Érvénytelen helyszín — válassz pontot a térképen.');
+
   let imagePath: string | null = null;
   try {
     imagePath = await saveUpload(formData.get('image'));
@@ -50,6 +53,8 @@ export async function submitIdea(formData: FormData) {
       ...data,
       locationName: data.isLocationIndependent ? null : data.locationName,
       seasonLabel: data.isSeasonal ? data.seasonLabel : null,
+      lat: data.isLocationIndependent ? null : point.lat,
+      lng: data.isLocationIndependent ? null : point.lng,
       imagePath,
       accessibility: multi(formData, 'accessibility', ACCESSIBILITY_OPTIONS.map((o) => o.key)),
       submitterId: user.id,

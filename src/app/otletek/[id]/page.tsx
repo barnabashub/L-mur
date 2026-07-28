@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
@@ -14,6 +15,14 @@ import { ACCESSIBILITY_BY_KEY } from '@/lib/constants';
 import { IdeaImage } from '@/components/IdeaImage';
 import { Stars, StarInput } from '@/components/Stars';
 import { Flash } from '@/components/Flash';
+
+const MapView = dynamic(() => import('@/components/MapView').then((m) => m.MapView), {
+  loading: () => (
+    <div className="flex h-[280px] items-center justify-center rounded-blob border border-edge bg-soft text-sm text-mute">
+      Térkép betöltése…
+    </div>
+  ),
+});
 
 export default async function IdeaPage({
   params,
@@ -113,6 +122,45 @@ export default async function IdeaPage({
           </p>
         </div>
       </section>
+
+      {idea.lat != null && idea.lng != null && (
+        <section className="space-y-3">
+          <h2 className="text-xl font-bold">Hol találjátok? 🗺️</h2>
+          <MapView
+            markers={[
+              {
+                id: idea.id,
+                lat: idea.lat,
+                lng: idea.lng,
+                title: idea.title,
+                subtitle: idea.locationName,
+              },
+            ]}
+            center={{ lat: idea.lat, lng: idea.lng }}
+            zoom={15}
+            height={280}
+            ariaLabel={`${idea.title} a térképen`}
+          />
+          <div className="flex flex-wrap gap-2">
+            <a
+              className="btn-secondary"
+              href={`https://www.google.com/maps/dir/?api=1&destination=${idea.lat},${idea.lng}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              🧭 Útvonaltervezés
+            </a>
+            <a
+              className="btn-ghost"
+              href={`https://www.openstreetmap.org/?mlat=${idea.lat}&mlon=${idea.lng}#map=16/${idea.lat}/${idea.lng}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Megnyitás az OpenStreetMapen
+            </a>
+          </div>
+        </section>
+      )}
 
       {idea.partner && (
         <section className="panel-amber p-6">

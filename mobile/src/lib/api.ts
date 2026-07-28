@@ -22,6 +22,8 @@ export type IdeaSummary = {
   completionCount: number;
   hasDiscount: boolean;
   accessibility?: string[];
+  lat?: number | null;
+  lng?: number | null;
 };
 
 export type IdeaDetail = IdeaSummary & {

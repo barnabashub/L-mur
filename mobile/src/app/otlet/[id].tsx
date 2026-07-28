@@ -6,6 +6,7 @@ import { api, imageUrl, type IdeaDetail, type ListSummary } from '../../lib/api'
 import { useAuth } from '../../lib/auth-context';
 import { spacing, useTheme } from '../../lib/theme'
 import { ACCESSIBILITY_LABELS } from '../../components/IdeaCard';
+import { MiniMap } from '../../components/MiniMap';
 import { Badge, Button, Card, Empty, ErrorText, Input, Label, StarPicker, Stars } from '../../components/ui';
 
 function formatDate(d: string) {
@@ -153,6 +154,13 @@ export default function IdeaScreen() {
           </Text>
         </View>
       </Card>
+
+      {idea.lat != null && idea.lng != null && (
+        <Card style={{ gap: spacing.s }}>
+          <Text style={{ fontWeight: '800', fontSize: 16, color: t.text }}>Hol találjátok? 🗺️</Text>
+          <MiniMap lat={idea.lat} lng={idea.lng} title={idea.title} />
+        </Card>
+      )}
 
       {idea.partner && (
         <Card style={{ backgroundColor: t.amberBg, borderColor: 'rgba(251, 191, 36, 0.4)', gap: 6 }}>
